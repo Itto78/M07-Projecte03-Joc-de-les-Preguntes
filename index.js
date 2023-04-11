@@ -21,7 +21,7 @@ io.on("connection", socket => {
 	console.log("Connectat un client...");
 
 	socket.on("nickname", function (data) {
-		console.log(data.nickname);
+		// console.log(data.nickname);
 
 		// Cada socket es individual
 		socket.data.nickname = data.nickname;
@@ -36,6 +36,21 @@ io.on("connection", socket => {
 
 		// Totes les funcions disponibles les tenim a
 		//  https://socket.io/docs/v4/emit-cheatsheet/
+	});
+
+	socket.on("get users", function (data) {
+		const users = [];
+
+		for (let [id, socket] of io.of("/").sockets) {
+			console.log(socket.data.nickname)
+			users.push({
+				userID: id,
+				username: socket.data.nickname,
+			});
+		}
+
+		socket.broadcast.emit("users", {users});
+		// ...
 	});
 
     socket.on("disconnect", function(){
@@ -55,44 +70,6 @@ app.get('/preguntes/:tematica', (req, res) => {
 });
 
 app.get('/preguntesRandom', (req, res) => {
-	// const preguntes = [];
-
-	// const nomFitxers=['artILiteratura','ciencia','historia','esports','geografia','naturalesa'];
-
-	// for(let nom of nomFitxers){
-	// 	let path = './preguntes/' + nom + '.json';
-
-	// 	fs.readFile(path, 'utf-8', (err, data) => {
-	// 		if (err) {
-	// 			console.log(err);
-	// 			return;
-	// 		}
-
-
-	// 		let arrayPosPreguntes = [];
-
-	// 		let arrayPreguntes = JSON.parse(data);
-
-	// 		for(let i = 0; i < 5; i++){
-	// 			let posPregunta = Math.floor(Math.random() * arrayPreguntes.length);
-	// 			// console.log(!arrayPosPreguntes.includes(posPregunta))
-
-	// 			if(!arrayPosPreguntes.includes(posPregunta)){
-	// 				// console.log(arrayPreguntes[posPregunta])
-	// 				arrayPosPreguntes.push(posPregunta);
-	// 				preguntes.push(arrayPreguntes[posPregunta]);
-	// 			}
-	// 			else i--;
-	// 		}
-
-	// 	});
-	// 	console.log(preguntes)
-
-	// }
-
-	// console.log(preguntes)
-
-	// res.status(200).json({preguntes});
 
 	const preguntes = [];
 
