@@ -43,8 +43,8 @@ io.on("connection", socket => {
     })
 });
 
-app.get('/esports', (req, res) => {
-	const path = './preguntes/esports.json';
+app.get('/preguntes/:tematica', (req, res) => {
+	const path = './preguntes/' + req.params.tematica + '.json';
 	fs.readFile(path, 'utf-8', (err, data) => {
 		if (err) {
 			console.log(err);
@@ -52,6 +52,88 @@ app.get('/esports', (req, res) => {
 		}
 		res.status(200).json({preguntes: JSON.parse(data)});
 	});
+});
+
+app.get('/preguntesRandom', (req, res) => {
+	// const preguntes = [];
+
+	// const nomFitxers=['artILiteratura','ciencia','historia','esports','geografia','naturalesa'];
+
+	// for(let nom of nomFitxers){
+	// 	let path = './preguntes/' + nom + '.json';
+
+	// 	fs.readFile(path, 'utf-8', (err, data) => {
+	// 		if (err) {
+	// 			console.log(err);
+	// 			return;
+	// 		}
+
+
+	// 		let arrayPosPreguntes = [];
+
+	// 		let arrayPreguntes = JSON.parse(data);
+
+	// 		for(let i = 0; i < 5; i++){
+	// 			let posPregunta = Math.floor(Math.random() * arrayPreguntes.length);
+	// 			// console.log(!arrayPosPreguntes.includes(posPregunta))
+
+	// 			if(!arrayPosPreguntes.includes(posPregunta)){
+	// 				// console.log(arrayPreguntes[posPregunta])
+	// 				arrayPosPreguntes.push(posPregunta);
+	// 				preguntes.push(arrayPreguntes[posPregunta]);
+	// 			}
+	// 			else i--;
+	// 		}
+
+	// 	});
+	// 	console.log(preguntes)
+
+	// }
+
+	// console.log(preguntes)
+
+	// res.status(200).json({preguntes});
+
+	const preguntes = [];
+
+	const nomFitxers=['artILiteratura','ciencia','historia','esports','geografia','naturalesa'];
+
+	Promise.all(nomFitxers.map(nom => {
+	let path = './preguntes/' + nom + '.json';
+
+	return new Promise((resolve, reject) => {
+		fs.readFile(path, 'utf-8', (err, data) => {
+		if (err) {
+			console.log(err);
+			reject(err);
+			return;
+		}
+
+		let arrayPosPreguntes = [];
+		let arrayPreguntes = JSON.parse(data);
+
+		for (let i = 0; i < 5; i++) {
+			let posPregunta = Math.floor(Math.random() * arrayPreguntes.length);
+
+			if (!arrayPosPreguntes.includes(posPregunta)) {
+				arrayPosPreguntes.push(posPregunta);
+				preguntes.push(arrayPreguntes[posPregunta]);
+			} else {
+				i--;
+			}
+		}
+
+		resolve();
+		});
+	});
+	})).then(() => {
+		console.log(preguntes);
+		res.status(200).json({preguntes});
+	}).catch(err => {
+		console.log(err);
+		res.status(500).send('Error');
+	});
+
 });
 
 httpServer.listen(3000, () =>
