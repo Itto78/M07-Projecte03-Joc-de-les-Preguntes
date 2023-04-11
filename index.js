@@ -1,15 +1,15 @@
 const express = require("express");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
+const fs = require('fs');
 
 const app = express();
 const httpServer = createServer(app);
 
 app.use(express.static("public"));
+app.use(express.json());
 
 const io = new Server(httpServer, {});
-
-var idInterval = setInterval(enviar, 5000);
 
 function enviar() {
 	console.log("enviant missatge");
@@ -41,6 +41,17 @@ io.on("connection", socket => {
     socket.on("disconnect", function(){
         console.log('Usuari desconectat');
     })
+});
+
+app.get('/esports', (req, res) => {
+	const path = './preguntes/esports.json';
+	fs.readFile(path, 'utf-8', (err, data) => {
+		if (err) {
+			console.log(err);
+			return;
+		}
+		res.status(200).json({preguntes: JSON.parse(data)});
+	});
 });
 
 httpServer.listen(3000, () =>

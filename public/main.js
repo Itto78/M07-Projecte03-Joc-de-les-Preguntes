@@ -1,25 +1,19 @@
+const socket = io({
+    autoConnect: false
+}); // Obre una conecció amb el servidor
 
-const socket = io(); // Obre una conecció amb el servidor
+// Capturem events dels botons de la pàgina principal
+const crearPartida = document.getElementById("crearPartida");
+crearPartida.addEventListener("click", crearPartidaAdmin);
+const jugarPartida = document.getElementById("jugarPartida");
+jugarPartida.addEventListener("click", jugarPartidaClient);
 
-const nicknameInput = document.getElementById("nicknameInput");
-const sendButton = document.getElementById("sendButton");
-sendButton.addEventListener("click", send)
-
-function send() {
-    // Envia un missatge tipus nickname, la primera part ("") es configurable excepte paraules reservades segona part el contingut (,)
-    socket.emit("nickname", {nickname: nicknameInput.value} )
+function crearPartidaAdmin () {
+    socket.connect();
+    window.location.href = 'crearPartida.html';
 }
 
-socket.on('nickname rebut', function(data) {
-
-    console.log(data)
-
-})
-
-
-socket.on('time', function(data) {
-
-    console.log(data)
-
-})
-
+function jugarPartidaClient() {
+    socket.connect();
+    window.location.href = 'jugarPartida.html';
+}
