@@ -1,0 +1,82 @@
+[
+  {
+    "pregunta": "¿Cuál es el río más largo del mundo?",
+    "a": "Amazonas",
+    "b": "Nilo",
+    "c": "Yangtsé",
+    "d": "Misisipi",
+    "correcta": "Nilo"
+  },
+  {
+    "pregunta": "¿Cuál es el océano más grande del mundo?",
+    "a": "Océano Pacífico",
+    "b": "Océano Atlántico",
+    "c": "Océano Índico",
+    "d": "Océano Antártico",
+    "correcta": "Océano Pacífico"
+  },
+  {
+    "pregunta": "¿Cuál es el país más grande del mundo?",
+    "a": "Rusia",
+    "b": "China",
+    "c": "Estados Unidos",
+    "d": "Canadá",
+    "correcta": "Rusia"
+  },
+  {
+    "pregunta": "¿En qué continente se encuentra el Monte Everest?",
+    "a": "África",
+    "b": "Europa",
+    "c": "Asia",
+    "d": "Oceanía",
+    "correcta": "Asia"
+  },
+  {
+    "pregunta": "¿Cuál es el país más pequeño del mundo?",
+    "a": "San Marino",
+    "b": "Mónaco",
+    "c": "Vaticano",
+    "d": "Nauru",
+    "correcta": "Vaticano"
+  },
+  {
+    "pregunta": "¿En qué país se encuentra la Torre Eiffel?",
+    "a": "Italia",
+    "b": "Francia",
+    "c": "España",
+    "d": "Inglaterra",
+    "correcta": "Francia"
+  },
+  {
+    "pregunta": "¿En qué país se encuentra la ciudad de Marrakech?",
+    "a": "Egipto",
+    "b": "Túnez",
+    "c": "Marruecos",
+    "d": "Argelia",
+    "correcta": "Marruecos"
+  },
+  {
+    "pregunta": "¿En qué país se encuentra el río Danubio?",
+    "a": "Alemania",
+    "b": "Rusia",
+    "c": "Hungría",
+    "d": "Francia",
+    "correcta": "Hungría"
+  },
+  {
+    "pregunta": "¿En qué país se encuentra el lago Titicaca?",
+    "a": "Perú",
+    "b": "Bolivia",
+    "c": "Chile",
+    "d": "Argentina",
+    "correcta": "Bolivia"
+  },
+  {
+    "pregunta": "¿En qué continente se encuentra el país de Ghana?",
+    "a": "África",
+    "b": "Asia",
+    "c": "Europa",
+    "d": "Oceanía",
+    "correcta": "África"
+  }
+]
