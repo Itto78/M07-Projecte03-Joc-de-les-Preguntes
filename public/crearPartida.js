@@ -1,6 +1,11 @@
 // ############################################################### //
 // ####################  Crear Partida  ########################## //
 // ############################################################### //
+
+const socket = io({
+    autoConnect: false
+}); // Obre una conecció amb el servidor
+
 const seleccioTematica = document.getElementById("seleccioTematica");
 seleccioTematica.addEventListener("click", generarPreguntes);
 
@@ -21,3 +26,7 @@ async function generarPreguntes() {
             break;
     }
 }
+
+socket.on('users', function(users){
+    console.log(users)
+})
