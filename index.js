@@ -39,7 +39,7 @@ io.on("connection", socket => {
 	});
 
     socket.on("disconnect", function(){
-        console.log('Usuari desconectat')
+        console.log('Usuari desconectat');
     })
 });
 

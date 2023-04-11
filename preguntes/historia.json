@@ -1,0 +1,82 @@
+[
+	{
+		"pregunta": "¿Quién fue el primer emperador romano?",
+		"a": "Julio César",
+		"b": "Augusto",
+		"c": "Tiberio",
+		"d": "Nerón",
+		"correcta": "Augusto"
+	},
+	{
+		"pregunta": "¿En qué año terminó la Segunda Guerra Mundial?",
+		"a": "1942",
+		"b": "1943",
+		"c": "1944",
+		"d": "1945",
+		"correcta": "1945"
+	},
+	{
+		"pregunta": "¿Quién fue el líder de la Revolución cubana?",
+		"a": "Fidel Castro",
+		"b": "Che Guevara",
+		"c": "Camilo Cienfuegos",
+		"d": "Raul Castro",
+		"correcta": "Fidel Castro"
+	},
+	{
+		"pregunta": "¿Quién fue el presidente de los Estados Unidos durante la Guerra Fría?",
+		"a": "John F. Kennedy",
+		"b": "Dwight D. Eisenhower",
+		"c": "Ronald Reagan",
+		"d": "Harry S. Truman",
+		"correcta": "John F. Kennedy"
+	},
+	{
+		"pregunta": "¿En qué año fue fundada la ciudad de Roma?",
+		"a": "753 a.C.",
+		"b": "476 d.C.",
+		"c": "1453 d.C.",
+		"d": "1492 d.C.",
+		"correcta": "753 a.C."
+	},
+	{
+		"pregunta": "¿Quién fue el líder del Partido Nazi durante la Segunda Guerra Mundial?",
+		"a": "Joseph Stalin",
+		"b": "Benito Mussolini",
+		"c": "Adolf Hitler",
+		"d": "Hirohito",
+		"correcta": "Adolf Hitler"
+	},
+	{
+		"pregunta": "¿Qué famoso líder pacifista lideró el movimiento por la independencia de la India?",
+		"a": "Nelson Mandela",
+		"b": "Mohandas Gandhi",
+		"c": "Martin Luther King Jr.",
+		"d": "Malcolm X",
+		"correcta": "Mohandas Gandhi"
+	},
+	{
+		"pregunta": "¿En qué año comenzó la Primera Guerra Mundial?",
+		"a": "1912",
+		"b": "1913",
+		"c": "1914",
+		"d": "1915",
+		"correcta": "1914"
+	},
+	{
+		"pregunta": "¿En qué año se firmó la Declaración de Independencia de los Estados Unidos?",
+		"a": "1774",
+		"b": "1775",
+		"c": "1776",
+		"d": "1777",
+		"correcta": "1776"
+	},
+	{
+		"pregunta": "¿Quién fue el líder soviético durante la Guerra Fría?",
+		"a": "Vladimir Putin",
+		"b": "Leonid Brezhnev",
+		"c": "Mikhail Gorbachev",
+		"d": "Joseph Stalin",
+		"correcta": "Leonid Brezhnev"
+	}
+]
