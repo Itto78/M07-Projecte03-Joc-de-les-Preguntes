@@ -3,7 +3,8 @@
 // ############################################################### //
 
 const socket = io({
-    autoConnect: false
+    autoConnect: false,
+    tipus: "admin"
 }); // Obre una conecció amb el servidor
 
 const seleccioTematica = document.getElementById("seleccioTematica");

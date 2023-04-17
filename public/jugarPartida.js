@@ -1,5 +1,6 @@
 const socket = io({
-    autoConnect: false
+    autoConnect: false,
+    tipus: "jugador"
 }); // Obre una conecció amb el servidor
 
 const nicknameInput = document.getElementById("nicknameInput");
