@@ -20,19 +20,22 @@ function enviar() {
 io.on("connection", socket => {
 	console.log("Connectat un client...");
 
+	socket.on('join room', function(room) {
+		socket.join(room);
+		console.log(`El socket ${socket.id} se unió a la sala ${room}`);
+	});
+
 	socket.on("nickname", function (data) {
-		// console.log(data.nickname);
 
 		// Cada socket es individual
 		socket.data.nickname = data.nickname;
+		socket.data.puntuacio = 0;
 
 		// respondre al que ha enviat
 		socket.emit("nickname rebut", { response: "ok" });
 
 		// respondre a la resta de clients menys el que ha enviat
-		socket.broadcast.emit("nickname rebut", {
-			response: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-		});
+		// socket.broadcast.emit("nickname rebut", {});
 
 		// Totes les funcions disponibles les tenim a
 		//  https://socket.io/docs/v4/emit-cheatsheet/
@@ -46,11 +49,12 @@ io.on("connection", socket => {
 			users.push({
 				userID: id,
 				username: socket.data.nickname,
+				puntuacio: socket.data.puntuacio
 			});
 		}
 
-		socket.broadcast.emit("users", {users});
-		// ...
+		// socket.broadcast.emit("users", {users});
+		io.to('my-room').emit('users', {users});
 	});
 
     socket.on("disconnect", function(){

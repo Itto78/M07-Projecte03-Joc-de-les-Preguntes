@@ -1,10 +1,6 @@
-// ############################################################### //
-// ####################  Crear Partida  ########################## //
-// ############################################################### //
 
-const socket = io({
-    autoConnect: false
-}); // Obre una conecció amb el servidor
+import socket from './socket.js';
+
 
 const seleccioTematica = document.getElementById("seleccioTematica");
 seleccioTematica.addEventListener("click", generarPreguntes);
@@ -27,6 +23,16 @@ async function generarPreguntes() {
     }
 }
 
+socket.connect();
+
+socket.emit('join room', 'my-room');
+
 socket.on('users', function(users){
+
     console.log(users)
+
+    // const div = document.getElementById(container);
+    // users.map(user =>{
+    //     const div
+    // })
 })
