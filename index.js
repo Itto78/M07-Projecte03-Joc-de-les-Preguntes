@@ -1,20 +1,41 @@
+// S'importa el mòdul 'express' per a poder definir rutes i controladors
 const express = require("express");
+// S'importa la funció 'createServer' del mòdul 'http'
 const { createServer } = require("http");
+// S'importa la classe 'Server' del mòdul 'socket.io'
 const { Server } = require("socket.io");
+// S'importa el mòdul 'fs' per a poder treballar amb arxius
 const fs = require('fs');
 
+// Es crea una instància a l'aplicació web en express i s'assigna a la variable 'app'
 const app = express();
+// S'utilitza la funció 'createServer' importada anteriorment per a crear el servidor 
+// HTTP i assignar-lo a la variable 'httpServer'
 const httpServer = createServer(app);
 
+// El mètode 'use' de l'aplicació web en express serveix per a afegir middlewares.
+// S'afegeix el middleware que subministra els arxius estàtics des del directori 'public'
 app.use(express.static("public"));
+// S'afegeix el middleware per a analitzar el cos de les sol·licituds com a objectes JSON
 app.use(express.json());
 
+// Es crea una instància de la classe 'Server' importada anteriorment i se li passa
+// per paràmetre el servidor 'httpServer'
 const io = new Server(httpServer, {});
+
 
 function enviar() {
 	console.log("enviant missatge");
 	io.emit("time", { message: "Hola" });
 }
+
+// io - serveix per al tractament d'events entre el servidor i el client
+
+// io.emit('nom_event',{objecte JSON})- Aquest mètode envia un event a tots 
+// 		els clients connectats. El primer paràmetre és el nom de l'event i el 
+// 		segon paràmetre són les dades que s'envien.
+
+
 
 // connection es una paraula reservada
 io.on("connection", socket => {

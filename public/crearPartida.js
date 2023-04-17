@@ -1,6 +1,4 @@
-
 import socket from './socket.js';
-
 
 const seleccioTematica = document.getElementById("seleccioTematica");
 seleccioTematica.addEventListener("click", generarPreguntes);
