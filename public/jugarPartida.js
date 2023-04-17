@@ -1,6 +1,4 @@
-const socket = io({
-    autoConnect: false
-}); // Obre una conecció amb el servidor
+import socket from './socket.js';
 
 const nicknameInput = document.getElementById("nicknameInput");
 const sendButton = document.getElementById("sendButton");
@@ -14,9 +12,10 @@ function send() {
 
 socket.on('nickname rebut', function(data) {
 
-    console.log(data);
+    socket.connect();
 
     socket.emit('get users', {});
+    socket.emit('join room', 'my-room');
 
 });
 
