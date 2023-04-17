@@ -12,10 +12,9 @@ function send() {
 
 socket.on('nickname rebut', function(data) {
 
-    socket.connect();
+    socket.emit('join room', 'my-room');
 
     socket.emit('get users', {});
-    socket.emit('join room', 'my-room');
 
 });
 

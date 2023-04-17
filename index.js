@@ -66,12 +66,13 @@ io.on("connection", socket => {
 		const users = [];
 
 		for (let [id, socket] of io.of("/").sockets) {
-			console.log(socket.data.nickname)
-			users.push({
-				userID: id,
-				username: socket.data.nickname,
-				puntuacio: socket.data.puntuacio
-			});
+			if(socket.data.nickname){
+				users.push({
+					userID: id,
+					username: socket.data.nickname,
+					puntuacio: socket.data.puntuacio
+				});
+			}
 		}
 
 		// socket.broadcast.emit("users", {users});
