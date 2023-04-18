@@ -1,82 +1,102 @@
 [
     {
-      "pregunta": "¿Qué equipo de fútbol tiene más Champions League en su historia?",
-      "a": "Barcelona",
-      "b": "Manchester United",
-      "c": "Real Madrid",
-      "d": "Liverpool",
-      "correcta": "Real Madrid"
+        "pregunta": "¿Qué equipo de fútbol tiene más Champions League en su historia?",
+        "respostes": {
+            "a": "Barcelona",
+            "b": "Manchester United",
+            "c": "Real Madrid",
+            "d": "Liverpool"
+        },
+        "correcta": "Real Madrid"
     },
     {
         "pregunta": "¿Cuál es el evento de tenis más importante del mundo?",
-        "a": "Wimbledon",
-        "b": "Abierto de Australia",
-        "c": "Roland Garros",
-        "d": "Abierto de Estados Unidos",
+        "respostes": {
+            "a": "Wimbledon",
+            "b": "Abierto de Australia",
+            "c": "Roland Garros",
+            "d": "Abierto de Estados Unidos"
+        },
         "correcta": "Wimbledon"
     },
     {
         "pregunta": "¿Qué boxeador estadounidense ostenta el récord de más títulos mundiales en diferentes categorías?",
-        "a": "Muhammad Ali",
-        "b": "Sugar Ray Leonard",
-        "c": "Floyd Mayweather Jr.",
-        "d": "Manny Pacquiao",
+        "respostes": {
+            "a": "Muhammad Ali",
+            "b": "Sugar Ray Leonard",
+            "c": "Floyd Mayweather Jr.",
+            "d": "Manny Pacquiao"
+        },
         "correcta": "Manny Pacquiao"
     },
     {
         "pregunta": "¿Quién es el jugador con más anillos de campeonato de la NBA?",
-        "a": "Michael Jordan",
-        "b": "Kobe Bryant",
-        "c": "Bill Russell",
-        "d": "LeBron James",
+        "respostes": {
+            "a": "Michael Jordan",
+            "b": "Kobe Bryant",
+            "c": "Bill Russell",
+            "d": "LeBron James"
+        },
         "correcta": "Bill Russell"
     },
     {
         "pregunta": "¿Quién es el futbolista con más goles en la historia del fútbol?",
-        "a": "Lionel Messi",
-        "b": "Pelé",
-        "c": "Cristiano Ronaldo",
-        "d": "Romário",
+        "respostes": {
+            "a": "Lionel Messi",
+            "b": "Pelé",
+            "c": "Cristiano Ronaldo",
+            "d": "Romário"
+        },
         "correcta": "Lionel Messi"
     },
     {
         "pregunta": "¿Cuál es el equipo de fútbol con más ligas ganadas en la historia de la Liga Española?",
-        "a": "Barcelona",
-        "b": "Real Madrid",
-        "c": "Atlético de Madrid",
-        "d": "Valencia",
+        "respostes": {
+            "a": "Barcelona",
+            "b": "Real Madrid",
+            "c": "Atlético de Madrid",
+            "d": "Valencia"
+        },
         "correcta": "Real Madrid"
     },
     {
         "pregunta": "¿Qué ciclista ganó siete Tour de Francia consecutivos?",
-        "a": "Lance Armstrong",
-        "b": "Chris Froome",
-        "c": "Eddy Merckx",
-        "d": "Miguel Induráin",
+        "respostes": {
+            "a": "Lance Armstrong",
+            "b": "Chris Froome",
+            "c": "Eddy Merckx",
+            "d": "Miguel Induráin"
+        },
         "correcta": "Lance Armstrong"
     },
     {
         "pregunta": "¿En qué país se originó el deporte del rugby?",
-        "a": "Inglaterra",
-        "b": "Escocia",
-        "c": "Irlanda",
-        "d": "Gales",
+        "respostes": {
+            "a": "Inglaterra",
+            "b": "Escocia",
+            "c": "Irlanda",
+            "d": "Gales"
+        },
         "correcta": "Inglaterra"
     },
     {
         "pregunta": "¿Cuál es el nadador con más medallas de oro en la historia de los Juegos Olímpicos?",
-        "a": "Mark Spitz",
-        "b": "Michael Phelps",
-        "c": "Matt Biondi",
-        "d": "Ian Thorpe",
+        "respostes": {
+            "a": "Mark Spitz",
+            "b": "Michael Phelps",
+            "c": "Matt Biondi",
+            "d": "Ian Thorpe"
+        },
         "correcta": "Michael Phelps"
     },
     {
         "pregunta": "¿Qué tenista masculino ostenta el récord de más semanas en el puesto número uno del ranking mundial?",
-        "a": "Roger Federer",
-        "b": "Rafael Nadal",
-        "c": "Novak Djokovic",
-        "d": "Pete Sampras",
+        "respostes": {
+            "a": "Roger Federer",
+            "b": "Rafael Nadal",
+            "c": "Novak Djokovic",
+            "d": "Pete Sampras"
+        },
         "correcta": "Novak Djokovic"
     }
 ]
