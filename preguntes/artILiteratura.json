@@ -12,90 +12,90 @@
   {
     "pregunta": "¿Quién es el autor de 'El Principito'?",
     "respostes": {
-    "a": "Gabriel García Márquez",
-    "b": "Jorge Luis Borges",
-    "c": "Antoine de Saint-Exupéry",
-    "d": "Octavio Paz"
+      "a": "Gabriel García Márquez",
+      "b": "Jorge Luis Borges",
+      "c": "Antoine de Saint-Exupéry",
+      "d": "Octavio Paz"
     },
     "correcta": "Antoine de Saint-Exupéry"
   },
   {
     "pregunta": "¿Quién es el autor de la pintura 'La noche estrellada'?",
     "respostes": {
-    "a": "Pablo Picasso",
-    "b": "Vincent van Gogh",
-    "c": "Leonardo da Vinci",
-    "d": "Michelangelo"
+      "a": "Pablo Picasso",
+      "b": "Vincent van Gogh",
+      "c": "Leonardo da Vinci",
+      "d": "Michelangelo"
     },
     "correcta": "Vincent van Gogh"
   },
   {
     "pregunta": "¿Quién es el autor de la escultura 'David'?",
     "respostes": {
-    "a": "Michelangelo",
-    "b": "Leonardo da Vinci",
-    "c": "Donatello",
-    "d": "Rafael"
+      "a": "Michelangelo",
+      "b": "Leonardo da Vinci",
+      "c": "Donatello",
+      "d": "Rafael"
     },
     "correcta": "Michelangelo"
   },
   {
     "pregunta": "¿Quién escribió 'Cien años de soledad'?",
     "respostes": {
-    "a": "Mario Vargas Llosa",
-    "b": "Gabriel García Márquez",
-    "c": "Isabel Allende",
-    "d": "Julio Cortázar"
+      "a": "Mario Vargas Llosa",
+      "b": "Gabriel García Márquez",
+      "c": "Isabel Allende",
+      "d": "Julio Cortázar"
     },
     "correcta": "Gabriel García Márquez"
   },
   {
     "pregunta": "¿Quién es el autor de la pintura 'La Gioconda'?",
     "respostes": {
-    "a": "Pablo Picasso",
-    "b": "Vincent van Gogh",
-    "c": "Leonardo da Vinci",
-    "d": "Michelangelo"
+      "a": "Pablo Picasso",
+      "b": "Vincent van Gogh",
+      "c": "Leonardo da Vinci",
+      "d": "Michelangelo"
     },
     "correcta": "Leonardo da Vinci"
   },
   {
     "pregunta": "¿Quién es el autor de la novela 'Matar a un ruiseñor'?",
     "respostes": {
-    "a": "Harper Lee",
-    "b": "Toni Morrison",
-    "c": "Maya Angelou",
-    "d": "Zora Neale Hurston"
+      "a": "Harper Lee",
+      "b": "Toni Morrison",
+      "c": "Maya Angelou",
+      "d": "Zora Neale Hurston"
     },
     "correcta": "Harper Lee"
   },
   {
     "pregunta": "¿Quién es el autor de la obra 'El Aleph'?",
     "respostes": {
-    "a": "Jorge Luis Borges",
-    "b": "Pablo Neruda",
-    "c": "Julio Cortázar",
-    "d": "Octavio Paz"
+      "a": "Jorge Luis Borges",
+      "b": "Pablo Neruda",
+      "c": "Julio Cortázar",
+      "d": "Octavio Paz"
     },
     "correcta": "Jorge Luis Borges"
   },
   {
     "pregunta": "¿Quién es el autor de la obra 'La metamorfosis'?",
     "respostes": {
-    "a": "Franz Kafka",
-    "b": "Friedrich Nietzsche",
-    "c": "Thomas Mann",
-    "d": "Hermann Hesse"
+      "a": "Franz Kafka",
+      "b": "Friedrich Nietzsche",
+      "c": "Thomas Mann",
+      "d": "Hermann Hesse"
     },
     "correcta": "Franz Kafka"
   },
   {
     "pregunta": "¿Quién es el autor de la pintura 'La persistencia de la memoria'?",
     "respostes": {
-    "a": "Salvador Dalí",
-    "b": "Pablo Picasso",
-    "c": "Vincent van Gogh",
-    "d": "Leonardo da Vinci"
+      "a": "Salvador Dalí",
+      "b": "Pablo Picasso",
+      "c": "Vincent van Gogh",
+      "d": "Leonardo da Vinci"
     },
     "correcta": "Salvador Dalí"
   }

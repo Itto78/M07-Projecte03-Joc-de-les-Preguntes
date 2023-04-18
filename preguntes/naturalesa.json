@@ -1,82 +1,102 @@
 [
     {
-      "pregunta": "¿Cuál es la principal fuente de energía para la mayoría de los seres vivos?",
-      "a": "La luz solar",
-      "b": "El agua",
-      "c": "El aire",
-      "d": "Los minerales",
-      "correcta": "La luz solar"
+        "pregunta": "¿Cuál es la principal fuente de energía para la mayoría de los seres vivos?",
+        "respostes": {
+            "a": "La luz solar",
+            "b": "El agua",
+            "c": "El aire",
+            "d": "Los minerales"
+        },
+        "correcta": "La luz solar"
     },
     {
         "pregunta": "¿Qué tipo de animal es un tigre?",
-        "a": "Herbívoro",
-        "b": "Carnívoro",
-        "c": "Omnívoro",
-        "d": "No se alimenta de carne",
+        "respostes": {
+            "a": "Herbívoro",
+            "b": "Carnívoro",
+            "c": "Omnívoro",
+            "d": "No se alimenta de carne"
+        },
         "correcta": "Carnívoro"
     },
     {
         "pregunta": "¿Qué es la fotosíntesis?",
-        "a": "El proceso por el cual los seres vivos obtienen energía de los alimentos",
-        "b": "El proceso por el cual los seres vivos liberan energía",
-        "c": "El proceso por el cual los seres vivos producen su propio alimento",
-        "d": "El proceso por el cual los seres vivos eliminan los desechos",
+        "respostes": {
+            "a": "El proceso por el cual los seres vivos obtienen energía de los alimentos",
+            "b": "El proceso por el cual los seres vivos liberan energía",
+            "c": "El proceso por el cual los seres vivos producen su propio alimento",
+            "d": "El proceso por el cual los seres vivos eliminan los desechos"
+        },
         "correcta": "El proceso por el cual los seres vivos producen su propio alimento"
     },
     {
         "pregunta": "¿Qué animal es conocido por cambiar de color según su entorno?",
-        "a": "La jirafa",
-        "b": "El camaleón",
-        "c": "El rinoceronte",
-        "d": "El elefante",
+        "respostes": {
+            "a": "La jirafa",
+            "b": "El camaleón",
+            "c": "El rinoceronte",
+            "d": "El elefante"
+        },
         "correcta": "El camaleón"
     },
     {
         "pregunta": "¿Qué parte del árbol es responsable de llevar el agua y los nutrientes desde las raíces hasta las hojas?",
-        "a": "La corteza",
-        "b": "La hoja",
-        "c": "La raíz",
-        "d": "El tronco",
+        "respostes": {
+            "a": "La corteza",
+            "b": "La hoja",
+            "c": "La raíz",
+            "d": "El tronco"
+        },
         "correcta": "El tronco"
     },
     {
         "pregunta": "¿Cuál es el océano más grande del mundo?",
-        "a": "Atlántico",
-        "b": "Índico",
-        "c": "Pacífico",
-        "d": "Ártico",
+        "respostes": {
+            "a": "Atlántico",
+            "b": "Índico",
+            "c": "Pacífico",
+            "d": "Ártico"
+        },
         "correcta": "Pacífico"
     },
     {
         "pregunta": "¿Cuál es el animal más grande del mundo?",
-        "a": "Elefante africano",
-        "b": "Ballena azul",
-        "c": "Tiburón blanco",
-        "d": "Gorila",
+        "respostes": {
+            "a": "Elefante africano",
+            "b": "Ballena azul",
+            "c": "Tiburón blanco",
+            "d": "Gorila"
+        },
         "correcta": "Ballena azul"
     },
     {
         "pregunta": "¿Qué es un ecosistema?",
-        "a": "Una sola especie de plantas y animales que viven juntos",
-        "b": "Un grupo de animales que comparten un hábitat",
-        "c": "Un lugar donde los seres vivos interactúan entre sí y con su entorno",
-        "d": "Un grupo de plantas que crecen juntas",
+        "respostes": {
+            "a": "Una sola especie de plantas y animales que viven juntos",
+            "b": "Un grupo de animales que comparten un hábitat",
+            "c": "Un lugar donde los seres vivos interactúan entre sí y con su entorno",
+            "d": "Un grupo de plantas que crecen juntas"
+        },
         "correcta": "Un lugar donde los seres vivos interactúan entre sí y con su entorno"
     },
     {
         "pregunta": "¿Qué es la migración?",
-        "a": "El proceso por el cual los seres vivos se reproducen",
-        "b": "El proceso por el cual los seres vivos se mueven a un lugar nuevo en busca de alimento",
-        "c": "El proceso por el cual los seres vivos se mueven de un lugar a otro en busca de condiciones más favorables",
-        "d": "El proceso por el cual los seres vivos crecen y se desarrollan",
+        "respostes": {
+            "a": "El proceso por el cual los seres vivos se reproducen",
+            "b": "El proceso por el cual los seres vivos se mueven a un lugar nuevo en busca de alimento",
+            "c": "El proceso por el cual los seres vivos se mueven de un lugar a otro en busca de condiciones más favorables",
+            "d": "El proceso por el cual los seres vivos crecen y se desarrollan"
+        },
         "correcta": "El proceso por el cual los seres vivos se mueven de un lugar a otro en busca de condiciones más favorables"
     },
     {
         "pregunta": "¿Qué animal es conocido por ser el más rápido del mundo?",
-        "a": "Guepardo",
-        "b": "Leopardo",
-        "c": "Pantera",
-        "d": "Jaguar",
+        "respostes": {
+            "a": "Guepardo",
+            "b": "Leopardo",
+            "c": "Pantera",
+            "d": "Jaguar"
+        },
         "correcta": "Guepardo"
     }
 ]

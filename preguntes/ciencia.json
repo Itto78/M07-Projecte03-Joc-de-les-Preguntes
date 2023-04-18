@@ -1,82 +1,102 @@
 [
 	{
 		"pregunta": "¿Cuál es la ley de la gravedad propuesta por Isaac Newton?",
-		"a": "Ley de Ohm",
-		"b": "Ley de Coulomb",
-		"c": "Ley de Boyle",
-		"d": "Ley de la gravitación universal",
+		"respostes": {
+			"a": "Ley de Ohm",
+			"b": "Ley de Coulomb",
+			"c": "Ley de Boyle",
+			"d": "Ley de la gravitación universal"
+		},
 		"correcta": "Ley de la gravitación universal"
 	},
 	{
 		"pregunta": "¿Qué tipo de células se encargan de la defensa del cuerpo humano?",
-		"a": "Neuronas",
-		"b": "Glóbulos rojos",
-		"c": "Glóbulos blancos",
-		"d": "Células musculares",
+		"respostes": {
+			"a": "Neuronas",
+			"b": "Glóbulos rojos",
+			"c": "Glóbulos blancos",
+			"d": "Células musculares"
+		},
 		"correcta": "Glóbulos blancos"
 	},
 	{
 		"pregunta": "¿Cuál es la molécula que almacena la información genética en los seres vivos?",
-		"a": "Proteína",
-		"b": "Lípido",
-		"c": "Ácido nucleico",
-		"d": "Carbohidrato",
+		"respostes": {
+			"a": "Proteína",
+			"b": "Lípido",
+			"c": "Ácido nucleico",
+			"d": "Carbohidrato"
+		},
 		"correcta": "Ácido nucleico"
 	},
 	{
 		"pregunta": "¿Qué teoría científica propone que los continentes se mueven?",
-		"a": "Teoría del Big Bang",
-		"b": "Teoría de la relatividad",
-		"c": "Teoría de la evolución",
-		"d": "Teoría de la tectónica de placas",
+		"respostes": {
+			"a": "Teoría del Big Bang",
+			"b": "Teoría de la relatividad",
+			"c": "Teoría de la evolución",
+			"d": "Teoría de la tectónica de placas"
+		},
 		"correcta": "Teoría de la tectónica de placas"
 	},
 	{
 		"pregunta": "¿Qué tipo de energía produce un panel solar?",
-		"a": "Energía eólica",
-		"b": "Energía hidráulica",
-		"c": "Energía solar",
-		"d": "Energía geotérmica",
+		"respostes": {
+			"a": "Energía eólica",
+			"b": "Energía hidráulica",
+			"c": "Energía solar",
+			"d": "Energía geotérmica"
+		},
 		"correcta": "Energía solar"
 	},
 	{
 		"pregunta": "¿Qué es la fotosíntesis?",
-		"a": "El proceso por el cual las plantas convierten la luz solar en energía química",
-		"b": "El proceso por el cual las plantas absorben nutrientes del suelo",
-		"c": "El proceso por el cual las plantas liberan oxígeno al ambiente",
-		"d": "El proceso por el cual las plantas eliminan dióxido de carbono",
+		"respostes": {
+			"a": "El proceso por el cual las plantas convierten la luz solar en energía química",
+			"b": "El proceso por el cual las plantas absorben nutrientes del suelo",
+			"c": "El proceso por el cual las plantas liberan oxígeno al ambiente",
+			"d": "El proceso por el cual las plantas eliminan dióxido de carbono"
+		},
 		"correcta": "El proceso por el cual las plantas convierten la luz solar en energía química"
 	},
 	{
 		"pregunta": "¿Qué teoría científica explica la expansión del universo?",
-		"a": "Teoría de la relatividad",
-		"b": "Teoría del Big Bang",
-		"c": "Teoría de la evolución",
-		"d": "Teoría de la gravedad",
+		"respostes": {
+			"a": "Teoría de la relatividad",
+			"b": "Teoría del Big Bang",
+			"c": "Teoría de la evolución",
+			"d": "Teoría de la gravedad"
+		},
 		"correcta": "Teoría del Big Bang"
 	},
 	{
 		"pregunta": "¿Qué es un ácido?",
-		"a": "Una sustancia que libera iones hidróxido (OH-) en el agua",
-		"b": "Una sustancia que libera iones de hidrógeno (H+) en el agua",
-		"c": "Una sustancia que libera iones de calcio (Ca2+) en el agua",
-		"d": "Una sustancia que no tiene ninguna propiedad ácida o básica",
+		"respostes": {
+			"a": "Una sustancia que libera iones hidróxido (OH-) en el agua",
+			"b": "Una sustancia que libera iones de hidrógeno (H+) en el agua",
+			"c": "Una sustancia que libera iones de calcio (Ca2+) en el agua",
+			"d": "Una sustancia que no tiene ninguna propiedad ácida o básica"
+		},
 		"correcta": "Una sustancia que libera iones de hidrógeno (H+) en el agua"
 	},
 	{
 		"pregunta": "¿Qué es un electrón?",
-		"a": "Una partícula subatómica con carga positiva",
-		"b": "Una partícula subatómica con carga negativa",
-		"c": "Una partícula subatómica sin carga eléctrica",
-		"d": "Una partícula subatómica con carga variable",
+		"respostes": {
+			"a": "Una partícula subatómica con carga positiva",
+			"b": "Una partícula subatómica con carga negativa",
+			"c": "Una partícula subatómica sin carga eléctrica",
+			"d": "Una partícula subatómica con carga variable"
+		},
 		"correcta": "Una partícula subatómica con carga negativa"
 	},
 	{
 		"pregunta": "¿Cuál es el nombre del fenómeno en el cual la luz se desvía al pasar por un medio con un índice de refracción diferente?",
-		"a": "Reflexión",
-		"b": "Refracción",
-		"c": "Difracción",
-		"d": "Polarización",
+		"respostes": {
+			"a": "Reflexión",
+			"b": "Refracción",
+			"c": "Difracción",
+			"d": "Polarización"
+		},
 		"correcta": "Refracción"
 	}
 ]
