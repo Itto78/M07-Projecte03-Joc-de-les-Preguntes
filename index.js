@@ -124,8 +124,6 @@ io.on("connection", socket => {
 		});
 	});
 
-	let correcta;
-
 	socket.on('carregaTema', function (data){
 		const path = './preguntes/' + data.tematica + '.json';
 		fs.readFile(path, 'utf-8', (err, data) => {
@@ -137,24 +135,29 @@ io.on("connection", socket => {
 			socket.emit('elements carregats',{response: true});
 			
 		});
-	})
-		// correcta={...des};
+	});
+
+	let correcta;
+
 
 	socket.on('començarJoc', function(){
 		console.log('comença el joc')
 
 		const des = seleccionarPreguntaAleatoria();
 		const { pregunta, respostes} = {...des};
-		correcta = {...des};
+		
+			correcta = des.correcta;
+			console.log(correcta);
 
 		socket.broadcast.emit('pregunta', {pregunta, respostes});
 
 		let count = 0;
 
-		intervalId = setInterval(function() {
+		let intervalId = setInterval(function() {
 			const des = seleccionarPreguntaAleatoria();
 			const { pregunta, respostes} = {...des};
-			correcta = {...des};
+			correcta = des.correcta;
+			console.log(correcta);
 			socket.broadcast.emit('pregunta', {pregunta, respostes});
 			count++;
 			if (count > JSON.parse(socket.data.preguntes).length) {
@@ -162,10 +165,15 @@ io.on("connection", socket => {
 			}
 		}, 10000);
 
+
 	});
 
 	socket.on('resposta', function(data){
-		if(correcta == data.resposta) socket.data.puntuacio++;
+		console.log(correcta);
+		console.log(data.resposta);
+
+		if(correcta == data.resposta) socket.data.puntuacio = socket.data.puntuacio + 1;
+		console.log(socket.data.puntuacio)
 	});
 
     socket.on("disconnect", function(){
