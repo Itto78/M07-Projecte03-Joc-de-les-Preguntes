@@ -11,13 +11,16 @@ async function generarPreguntes() {
     switch (tematica) {
         case "popurri":
             // preguntes = await fetch('/preguntesRandom')
-            // .then(response => response.json());   
+            // .then(response => response.json());
+            // Enviem l'event 'carregaPopurri'
             socket.emit('carregaPopurri');       
             break;
     
         default:
             // preguntes = await fetch('/preguntes/' + tematica)
             // .then(response => response.json());
+            // Enviem l'event 'carregaTema' al servidor per a llegir les preguntes, 
+            // de la temàtica seleccionada, de l'arxiu .json
             socket.emit('carregaTema', {tematica});
             break;
     }
@@ -53,8 +56,10 @@ function començarJoc(){
     socket.emit('començarJoc');
 }
 
+// Establim connexió amb el servidor
 socket.connect();
 
+// Enviem l'event 'join room' al servidor per a unir-se a la sala 'my-room'
 socket.emit('join room', 'my-room');
 
 socket.on('users', function(users){
