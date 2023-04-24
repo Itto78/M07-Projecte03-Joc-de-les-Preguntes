@@ -30,8 +30,10 @@ async function generarPreguntes() {
     // }
 }
 
+// Es rep l'event de 'elements carregats'
 socket.on('elements carregats', function(response){
-    console.log(response)
+    console.log(response);
+    // Habilitem el botó de 'Començar'
     if(response) {
         ButtonPartida.removeAttribute('disabled','');
     }

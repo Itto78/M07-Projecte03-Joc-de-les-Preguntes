@@ -34,6 +34,8 @@ socket.on('pregunta',function(response){
 
     titul.innerText = response.pregunta;
 
+    respostes.innerHTML='';
+
     for (let propietat in response.respostes) {
         const button = document.createElement('button');
         button.textContent = `${propietat}: ${response.respostes[propietat]}`;
@@ -41,10 +43,17 @@ socket.on('pregunta',function(response){
         respostes.appendChild(button);
     }
 
-    setInterval(function() {
-        resposta(null) ;
-        tresPrimers();
-    }, 10000);
+    let count = 10;
+    let setTemps = setInterval(function() {
+        count--;
+        console.log(count);
+
+        if(count==0){
+            clearInterval(setTemps)
+        }
+    }, 1000);
+
+
 
 });
 
