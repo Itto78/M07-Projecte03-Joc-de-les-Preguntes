@@ -32,12 +32,12 @@ socket.on('pregunta',function(response){
 
     titul.innerText = response.pregunta;
 
-    respostes.innerHTML='';
+    respostes.innerHTML = '';
 
     for (let propietat in response.respostes) {
         const button = document.createElement('button');
         button.textContent = `${propietat}: ${response.respostes[propietat]}`;
-        button.addEventListener('click',() => resposta(response.respostes[propietat]));
+        button.addEventListener('click',() => resposta(response.respostes[propietat], response.correcta));
         respostes.appendChild(button);
     }
 
@@ -46,18 +46,16 @@ socket.on('pregunta',function(response){
         count--;
         console.log(count);
 
-        if(count==0){
+        if(count == 0){
             clearInterval(setTemps)
         }
     }, 1000);
 
-
-
 });
 
-function resposta(resposta){
+function resposta(resposta, correcta){
     respostes.innerHTML = '';
-    socket.emit('resposta',{resposta});
+    socket.emit('resposta',{resposta, correcta});
 }
 
 
