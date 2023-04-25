@@ -128,49 +128,50 @@ io.on("connection", socket => {
 		const path = './preguntes/' + data.tematica + '.json';
 		fs.readFile(path, 'utf-8', (err, data) => {
 			if (err) {
-				socket.emit('elements carregats',{response: false});
+				socket.emit('elements carregats', {response: false});
 				return;
 			}
 			socket.data.preguntes = data;
-			socket.emit('elements carregats',{response: true});
+			socket.emit('elements carregats', {response: true});
 			
 		});
 	});
 
-	let correcta;
-
+	let respostesCorrectes = [];
 
 	socket.on('començarJoc', function(){
 		console.log('comença el joc')
 
 		const des = seleccionarPreguntaAleatoria();
 		const { pregunta, respostes} = {...des};
-		
-			correcta = des.correcta;
-			console.log(correcta);
 
-		socket.broadcast.emit('pregunta', {pregunta, respostes});
+		io.to('my-room').emit('pregunta', {pregunta, respostes});
 
 		let count = 0;
 
 		let intervalId = setInterval(function() {
 			const des = seleccionarPreguntaAleatoria();
 			const { pregunta, respostes} = {...des};
-			correcta = des.correcta;
-			console.log(correcta);
-			socket.broadcast.emit('pregunta', {pregunta, respostes});
+			io.to('my-room').emit('pregunta', {pregunta, respostes});
 			count++;
+
 			if (count > JSON.parse(socket.data.preguntes).length) {
 				clearInterval(intervalId);
 			}
+			
 		}, 10000);
-
 
 	});
 
+
 	socket.on('resposta', function(data){
-		console.log(correcta);
-		console.log(data.resposta);
+		console.log(respostesCorrectes)
+
+		let correcta = respostesCorrectes[respostesCorrectes.length - 1];
+
+		console.log(correcta)
+
+		comprobarResposta(data.resposta);
 
 		if(correcta == data.resposta) socket.data.puntuacio = socket.data.puntuacio + 1;
 		console.log(socket.data.puntuacio)
@@ -183,15 +184,32 @@ io.on("connection", socket => {
 	let preguntasEnviadas = [];
 
 	function seleccionarPreguntaAleatoria() {
-		let preguntasDisponibles = JSON.parse(socket.data.preguntes).filter(pregunta => !preguntasEnviadas.includes(pregunta));
-		if (preguntasDisponibles.length === 0) {
-		  preguntasEnviadas = [];
-		  preguntasDisponibles = JSON.parse(socket.data.preguntes);
+	  let preguntasDisponibles = JSON.parse(socket.data.preguntes).filter(pregunta => {
+		if(!preguntasEnviadas.some(preguntaEnviada => preguntaEnviada.pregunta === pregunta.pregunta)) {
+		  return pregunta;
 		}
-		const preguntaSeleccionada = preguntasDisponibles[Math.floor(Math.random() * preguntasDisponibles.length)];
-		preguntasEnviadas.push(preguntaSeleccionada);
-		return preguntaSeleccionada;
+	  });
+
+	  if (preguntasDisponibles.length === 10) {
+		preguntasEnviadas = [];
+		preguntasDisponibles = JSON.parse(socket.data.preguntes);
+	  }
+	  
+	  const preguntaSeleccionada = preguntasDisponibles[Math.floor(Math.random() * preguntasDisponibles.length)];
+	  preguntasEnviadas.push(preguntaSeleccionada);
+	  respostesCorrectes.push(preguntaSeleccionada.correcta);
+	  console.log({respostesCorrectes, correcta: preguntaSeleccionada.correcta})
+	  return preguntaSeleccionada;
+	};
+
+	function comprobarResposta(respostaUser){
+		console.log(respostesCorrectes)
+		let correcta = respostesCorrectes[respostesCorrectes.length - 1];
+
+		if(correcta == respostaUser) console.log(true)
 	}
+	
+
 });
 
 // app.get('/preguntes/:tematica', (req, res) => {
