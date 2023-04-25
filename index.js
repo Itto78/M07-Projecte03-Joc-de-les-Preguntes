@@ -31,10 +31,13 @@ const io = new Server(httpServer, {});
 
 
 
-// connection es una paraula reservada
+// Obrim connexió amb el socket on establim una serie de d'events que s'escoltaràn
+// directament d'aquest client
 io.on("connection", socket => {
+	// Informem de que el client s'acaba de connectar
 	console.log("Connectat un client...");
 
+	// Agreguem el socket a la sala compartida 'my-room'
 	socket.on('join room', function(room) {
 		socket.join(room);
 		console.log(`El socket ${socket.id} se unió a la sala ${room}`);
@@ -73,28 +76,40 @@ io.on("connection", socket => {
 		io.to('my-room').emit('users', {users});
 	});
 
-	socket.on('carregaPopurri',function(){
+	// Es rep l'event 'carregaPopurri' per part del client
+	socket.on('carregaPopurri', function(){
 		const preguntes = [];
+		var nomFitxers = [];
 
-		const nomFitxers = ['artILiteratura', 'ciencia', 'historia', 'esports', 'geografia', 'naturalesa'];
+		const directori = './preguntes'; // Ruta del directori que es vol llegir
+		
+		// Guardem les temàtiques a un array
+		fs.readdirSync(directori).forEach(nomArxiu => {
+			nomFitxers.push(nomArxiu.split('.')[0]);
+		});
 
+		// Llegirem un a un tots els arxius del directori /preguntes
 		Promise.all(nomFitxers.map(nom => {
 			let path = './preguntes/' + nom + '.json';
 
 			return new Promise((resolve, reject) => {
 				fs.readFile(path, 'utf-8', (err, data) => {
-				if (err) {
+				if (err) { // si es produeix algún error en la lectura d'algun arxiu
 					console.log(err);
-					reject(err);
+					reject(err); // Es rebutja la promesa
 					return;
 				}
 
+				// Si la lectura s'ha fet correctament, les dades de l'arxiu estaràn
+				// a la variable 'data'
 				let arrayPosPreguntes = [];
-				let arrayPreguntes = JSON.parse(data);
+				let arrayPreguntes = JSON.parse(data); // Convertim les preguntes a objecte JSON
 
+				// Guardem 5 preguntes de cada temàtica
 				for (let i = 0; i < 5; i++) {
 					let posPregunta = Math.floor(Math.random() * arrayPreguntes.length);
 
+					// Comprovem que la pregunta no estigui ja repetida
 					if (!arrayPosPreguntes.includes(posPregunta)) {
 						arrayPosPreguntes.push(posPregunta);
 						preguntes.push(arrayPreguntes[posPregunta]);
@@ -103,21 +118,27 @@ io.on("connection", socket => {
 					}
 				}
 
-				resolve();
+				resolve(); // Donem la promesa com a Resolta satisfactòriament
 				});
 			});
-		})).then(() => {
+		})).then(() => { // Una vegada s'hagin llegit tots els arxius, creem la propietat 'preguntes'
+						 // a l'objecte 'data' del socket on guardem totes les preguntes.
 			if(preguntes.length != 0 ){
 				socket.data.preguntes = preguntes;
+				// S'envia l'event 'elements carregats' amb un 'true' com a contingut
 				socket.emit('elements carregats',{response: true});
 			}
+			// S'envia l'event 'elements carregats' amb un 'false' com a contingut
 			else socket.emit('elements carregats',{response: false});
-		}).catch(err => {
+		}).catch(err => { // En cas d'error en la promesa
 			console.log(err);
 			res.status(500).send('Error');
 		});
 	});
 
+	// Es rep l'event 'carregaTema' per part del client i l'argument 'data'
+	// coincideix amb el nom de l'arxiu JSON que s'ha de llegir. Aquest
+	// arxiu està al directori /preguntes, que és on estan totes les preguntes
 	socket.on('carregaTema', function (data){
 		const path = './preguntes/' + data.tematica + '.json';
 		fs.readFile(path, 'utf-8', (err, data) => {
@@ -125,8 +146,12 @@ io.on("connection", socket => {
 				socket.emit('error al carregar', {response: false});
 				return;
 			}
+			// Si la lectura s'ha fet correctament, creem la propietat 'preguntes'
+			// a l'objecte 'data' del socket on guardem totes les preguntes.
 			socket.data.preguntes = data;
-			socket.emit('elements carregats', {response: true});
+			// S'envia l'event 'elements carregats' amb un 'true' com a contingut
+			socket.emit('elements carregats',{response: true});
+
 			
 		});
 	});
@@ -240,6 +265,7 @@ io.on("connection", socket => {
 
 // });
 
+// Iniciem el servidor HTTP pel port 3000
 httpServer.listen(3000, () =>
 	console.log(`Server listening at http://localhost:3000`),
 );
