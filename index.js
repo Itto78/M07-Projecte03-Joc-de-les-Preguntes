@@ -23,12 +23,6 @@ app.use(express.json());
 // per paràmetre el servidor 'httpServer'
 const io = new Server(httpServer, {});
 
-
-function enviar() {
-	console.log("enviant missatge");
-	io.emit("time", { message: "Hola" });
-}
-
 // io - serveix per al tractament d'events entre el servidor i el client
 
 // io.emit('nom_event',{objecte JSON})- Aquest mètode envia un event a tots 
@@ -148,11 +142,8 @@ io.on("connection", socket => {
 	socket.on('carregaTema', function (data){
 		const path = './preguntes/' + data.tematica + '.json';
 		fs.readFile(path, 'utf-8', (err, data) => {
-
-			if (err) { // si es produeix algún error en la lectura de l'arxiu
-				// S'envia l'event 'elements carregats' amb un 'false' com a contingut
-				socket.emit('elements carregats',{response: false});
-
+			if (err) {
+				socket.emit('error al carregar', {response: false});
 				return;
 			}
 			// Si la lectura s'ha fet correctament, creem la propietat 'preguntes'
@@ -165,25 +156,18 @@ io.on("connection", socket => {
 		});
 	});
 
-	let respostesCorrectes = [];
-
 	socket.on('començarJoc', function(){
 		console.log('comença el joc')
 
-		const des = seleccionarPreguntaAleatoria();
-		const { pregunta, respostes} = {...des};
-
-		io.to('my-room').emit('pregunta', {pregunta, respostes});
+		seleccionarPreguntaAleatoria();
 
 		let count = 0;
 
 		let intervalId = setInterval(function() {
-			const des = seleccionarPreguntaAleatoria();
-			const { pregunta, respostes} = {...des};
-			io.to('my-room').emit('pregunta', {pregunta, respostes});
+			seleccionarPreguntaAleatoria();
 			count++;
 
-			if (count > JSON.parse(socket.data.preguntes).length) {
+			if (count == JSON.parse(socket.data.preguntes).length) {
 				clearInterval(intervalId);
 			}
 			
@@ -191,19 +175,12 @@ io.on("connection", socket => {
 
 	});
 
-
 	socket.on('resposta', function(data){
-		console.log(respostesCorrectes)
-
-		let correcta = respostesCorrectes[respostesCorrectes.length - 1];
-
-		console.log(correcta)
-
-		comprobarResposta(data.resposta);
-
-		if(correcta == data.resposta) socket.data.puntuacio = socket.data.puntuacio + 1;
-		console.log(socket.data.puntuacio)
-	});
+		if(data.resposta == data.correcta) socket.data.puntuacio = socket.data.puntuacio + 1;
+		console.log(data.resposta);
+		console.log(data.correcta);
+		console.log(socket.data.puntuacio);
+	})
 
     socket.on("disconnect", function(){
         console.log('Usuari desconectat');
@@ -212,30 +189,23 @@ io.on("connection", socket => {
 	let preguntasEnviadas = [];
 
 	function seleccionarPreguntaAleatoria() {
-	  let preguntasDisponibles = JSON.parse(socket.data.preguntes).filter(pregunta => {
-		if(!preguntasEnviadas.some(preguntaEnviada => preguntaEnviada.pregunta === pregunta.pregunta)) {
-		  return pregunta;
+		let preguntasDisponibles = JSON.parse(socket.data.preguntes).filter(pregunta => {
+			if(!preguntasEnviadas.some(preguntaEnviada => preguntaEnviada.pregunta === pregunta.pregunta)) {
+			return pregunta;
+			}
+		});
+
+		if (preguntasDisponibles.length === 10) {
+			preguntasEnviadas = [];
+			preguntasDisponibles = JSON.parse(socket.data.preguntes);
 		}
-	  });
+		
+		const preguntaSeleccionada = preguntasDisponibles[Math.floor(Math.random() * preguntasDisponibles.length)];
+		preguntasEnviadas.push(preguntaSeleccionada);
 
-	  if (preguntasDisponibles.length === 10) {
-		preguntasEnviadas = [];
-		preguntasDisponibles = JSON.parse(socket.data.preguntes);
-	  }
-	  
-	  const preguntaSeleccionada = preguntasDisponibles[Math.floor(Math.random() * preguntasDisponibles.length)];
-	  preguntasEnviadas.push(preguntaSeleccionada);
-	  respostesCorrectes.push(preguntaSeleccionada.correcta);
-	  console.log({respostesCorrectes, correcta: preguntaSeleccionada.correcta})
-	  return preguntaSeleccionada;
+		const { pregunta, respostes, correcta} = {...preguntaSeleccionada};
+		io.to('my-room').emit('pregunta', {pregunta, respostes, correcta});
 	};
-
-	function comprobarResposta(respostaUser){
-		console.log(respostesCorrectes)
-		let correcta = respostesCorrectes[respostesCorrectes.length - 1];
-
-		if(correcta == respostaUser) console.log(true)
-	}
 	
 
 });
