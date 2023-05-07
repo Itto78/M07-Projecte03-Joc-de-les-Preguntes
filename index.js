@@ -48,6 +48,8 @@ io.on("connection", socket => {
 		// Cada socket es individual
 		socket.data.nickname = data.nickname;
 		socket.data.puntuacio = 0;
+		socket.data.historic = [];
+		socket.data.respostes = [];
 
 		// respondre al que ha enviat
 		if(socket.data.nickname != '') socket.emit("nickname rebut", { response: "ok" });
@@ -68,7 +70,9 @@ io.on("connection", socket => {
 				users.push({
 					userID: id,
 					username: socket.data.nickname,
-					puntuacio: socket.data.puntuacio
+					puntuacio: socket.data.puntuacio,
+					respostes: socket.data.respostes,
+					historic: socket.data.historic,
 				});
 			}
 		}
@@ -160,26 +164,36 @@ io.on("connection", socket => {
 		console.log('comença el joc')
 
 		seleccionarPreguntaAleatoria();
+		io.to('my-room').emit('numTotalPreg', {numTotalPreg: JSON.parse(socket.data.preguntes).length});
 
-		let count = 0;
+		let count = 1;
 
 		let intervalId = setInterval(function() {
-			seleccionarPreguntaAleatoria();
+			
 			count++;
-
 			if (count == JSON.parse(socket.data.preguntes).length) {
 				clearInterval(intervalId);
 			}
 			
-		}, 10000);
+			else {
+				seleccionarPreguntaAleatoria();
+				socket.emit('get users', {})
+			}
+			
+		}, 15000);
 
 	});
-
+	
 	socket.on('resposta', function(data){
-		if(data.resposta == data.correcta) socket.data.puntuacio = socket.data.puntuacio + 1;
-		console.log(data.resposta);
-		console.log(data.correcta);
-		console.log(socket.data.puntuacio);
+		if(data.resposta == data.correcta) {
+			socket.data.puntuacio = socket.data.puntuacio + 1;
+			socket.data.historic.push(true);
+		}
+		if(data.resposta == null) socket.data.historic.push(null);
+		else{
+			socket.data.historic.push(false);
+		}
+		socket.data.respostes.push(data.resposta);
 	})
 
     socket.on("disconnect", function(){
@@ -191,7 +205,7 @@ io.on("connection", socket => {
 	function seleccionarPreguntaAleatoria() {
 		let preguntasDisponibles = JSON.parse(socket.data.preguntes).filter(pregunta => {
 			if(!preguntasEnviadas.some(preguntaEnviada => preguntaEnviada.pregunta === pregunta.pregunta)) {
-			return pregunta;
+				return pregunta;
 			}
 		});
 
@@ -203,7 +217,7 @@ io.on("connection", socket => {
 		const preguntaSeleccionada = preguntasDisponibles[Math.floor(Math.random() * preguntasDisponibles.length)];
 		preguntasEnviadas.push(preguntaSeleccionada);
 
-		const { pregunta, respostes, correcta} = {...preguntaSeleccionada};
+		const { pregunta, respostes, correcta } = {...preguntaSeleccionada};
 		io.to('my-room').emit('pregunta', {pregunta, respostes, correcta});
 	};
 	

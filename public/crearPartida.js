@@ -47,15 +47,9 @@ function carregarJoc(){
         contador--;
         if (contador < 0) {
             clearInterval(temporizador);
-            començarJoc();
-            console.log("¡Tiempo terminado!");
+            socket.emit('començarJoc');
         }
     }, 1000);
-}
-
-function començarJoc(){
-    console.log('comença el joc')
-    socket.emit('començarJoc');
 }
 
 // Establim connexió amb el servidor

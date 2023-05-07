@@ -4,19 +4,24 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="jugarPartida.css">
     <title>Jugar Partida</title>
 </head>
 <body>
-    <h1>Jugar Partida</h1>
-    Client Entra el teu nom <input id="nicknameInput" type="text" />
-	<button id="sendButton">Començar Partida</button>
+    <h1 id="titol">Jugar Partida</h1>
+    <div id="nickname">
+        Client Entra el teu nom <input id="nicknameInput" type="text" />
+        <button id="sendButton">Començar Partida</button>
+    </div>
     <div id="container">
 
-        <div id="titolPregunta"></div>
+        <section id="usuaris"></section>
+        <section id="temps"></section>
+        <section id="historic"></section>
 
         <section> 
 
-            <h3 id="titul"></h3>
+            <h3 id="pregunta"></h3>
             <div id="respostes">
 
             </div>
