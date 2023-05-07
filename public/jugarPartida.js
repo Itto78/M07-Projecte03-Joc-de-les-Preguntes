@@ -13,8 +13,8 @@ const nicknameInput = document.getElementById("nicknameInput");
 const sendButton = document.getElementById("sendButton");
 sendButton.addEventListener("click", send);
 
-let preguntaActual = 0;
-let totalPreguntesRespostes;
+let preguntaActual = 1;
+let totalPreguntesRespostes, childrens, id;
 
 function send() {
     // Envia un missatge tipus nickname, la primera part ("") 
@@ -27,6 +27,10 @@ function send() {
 
 socket.on('nickname rebut', function(data) {
 
+    console.log(data);
+
+    // document.cookie = 'id=' +data.id;
+    id = data.id;
     socket.emit('join room', 'my-room');
 
     socket.emit('get users', {});
@@ -36,22 +40,26 @@ socket.on('nickname rebut', function(data) {
 socket.on('users', function(data){
     const users = data.users;
 
-    console.log(users)
+    // const id = getCookieValue('id');
+
+    console.log({users, id})
     nickname.remove();
     usuaris.innerHTML = '';
     for (let i in users){
+        if(id == users[i].userID) totalPreguntesRespostes = users[i].historic;
         const span = document.createElement('span');
-        span.textContent = users[i].username + '    ' + users[i].puntuacio;
+        span.textContent = 'nickName: ' + users[i].username + ' puntuacio: ' + users[i].puntuacio + " percentatje d'accerts: " 
+        + calcularPercentatjes(users[i].numeroEncerts) + "% percentatjes d'errros: " + calcularPercentatjes(users[i].numeroErrors) + '%';
         usuaris.appendChild(span);
-        totalPreguntesRespostes = users[i].historic;
+        const br = document.createElement('br');
+        usuaris.appendChild(br);
     }
 
 });
 
 socket.on('pregunta', function(response){
     const {pregunta, respostes , correcta} = response;
-    divRespostes.removeAttribute('disabled', '');
-    if(totalPreguntesRespostes != 0) preguntaActual++;
+    console.log(correcta);
     modificarHistoric();
     let count = 10;
     temps.innerText = count + 's'
@@ -60,7 +68,7 @@ socket.on('pregunta', function(response){
         temps.innerText = count + 's';
         if(count == 0){
             clearInterval(setTemps);
-            if(!divRespostes.getAttribute('disabled')) resposta(null, correcta)
+            if(!divRespostes.firstChild.hasAttribute('disabled')) resposta(null, correcta);
             respostaCorrecte(correcta);
             socket.emit('get users', {});
         }
@@ -84,19 +92,31 @@ socket.on('numTotalPreg', function(data){
     for (let index = 0; index < data.numTotalPreg; index++) {
         const div = document.createElement('div');
         div.innerText = index + 1;
-        div.setAttribute('class', 'historic');
+        div.setAttribute('class', 'historic divNull');
         historic.appendChild(div);
     }
+    
+    childrens = historic.children;
+    modificarHistoric();
 });
 
+socket.on('final', function(){
+    socket.emit('get users', {});
+    modificarHistoric();
+})
+
 function resposta(resposta, correcta){
-    divRespostes.setAttribute('disabled', '');
+    let buttons = divRespostes.children;
+    for (const button of buttons) {
+        button.setAttribute("disabled","");
+    }
     socket.emit('resposta', {resposta, correcta});
+
 }
 
 function respostaCorrecte(correcta){
     let respostes = document.getElementsByClassName('respostes');
-    console.log(respostes[1])
+
     for(let i = 0; i < 4; i++){
         if(respostes[i].textContent !== correcta) {
             respostes[i].classList.add('incorrecta');
@@ -107,12 +127,37 @@ function respostaCorrecte(correcta){
 }
 
 function modificarHistoric(){
-    const children = historic.children;
-    for (const i of children) {
-        if(i == preguntaActual){
-            children[i].classList.add('preguntaActual')
-        }
+    if(!childrens) return;
+    
+    if(totalPreguntesRespostes.length != 0) {
+        preguntaActual++;
+    }
+
+    for (const children of childrens) {
+        let posicio = parseInt(children.textContent);
+
+        children.classList.toggle('preguntaActual', posicio == preguntaActual);
+
+        if(totalPreguntesRespostes[posicio - 1] === false) children.classList.replace('divNull', 'divIncorrecta');
+        if(totalPreguntesRespostes[posicio - 1] === true) children.classList.replace('divNull', 'divCorrecta');        
     }
 }
 
+function calcularPercentatjes(num){
+    if(childrens === undefined) return 0;
+    let numTotalPreguntes = childrens.length;
 
+    let percentatje = (num / numTotalPreguntes) * 100;
+    return percentatje;
+}
+
+function getCookieValue(name) {
+    var cookies = document.cookie.split("; ");
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].split("=");
+        if (cookie[0] === name) {
+            return decodeURIComponent(cookie[1]);
+        }
+    }
+    return "";
+}

@@ -49,10 +49,12 @@ io.on("connection", socket => {
 		socket.data.nickname = data.nickname;
 		socket.data.puntuacio = 0;
 		socket.data.historic = [];
+		socket.data.numeroEncerts = 0;
+		socket.data.numeroErrors = 0;
 		socket.data.respostes = [];
 
 		// respondre al que ha enviat
-		if(socket.data.nickname != '') socket.emit("nickname rebut", { response: "ok" });
+		if(socket.data.nickname != '') socket.emit("nickname rebut", { response: "ok", id: socket.id });
 		else socket.emit("nickname rebut", { response: "false", message: 'El camp no pot estar vuit' });
 
 		// respondre a la resta de clients menys el que ha enviat
@@ -73,6 +75,8 @@ io.on("connection", socket => {
 					puntuacio: socket.data.puntuacio,
 					respostes: socket.data.respostes,
 					historic: socket.data.historic,
+					numeroEncerts: socket.data.numeroEncerts,
+					numeroErrors: socket.data.numeroErrors,
 				});
 			}
 		}
@@ -171,13 +175,13 @@ io.on("connection", socket => {
 		let intervalId = setInterval(function() {
 			
 			count++;
-			if (count == JSON.parse(socket.data.preguntes).length) {
+			if (count > JSON.parse(socket.data.preguntes).length) {
 				clearInterval(intervalId);
+				io.to('my-room').emit('final');
 			}
 			
 			else {
 				seleccionarPreguntaAleatoria();
-				socket.emit('get users', {})
 			}
 			
 		}, 15000);
@@ -186,13 +190,18 @@ io.on("connection", socket => {
 	
 	socket.on('resposta', function(data){
 		if(data.resposta == data.correcta) {
-			socket.data.puntuacio = socket.data.puntuacio + 1;
+			socket.data.puntuacio += 1;
 			socket.data.historic.push(true);
+			socket.data.numeroEncerts += 1;
 		}
-		if(data.resposta == null) socket.data.historic.push(null);
-		else{
+
+		else if(data.resposta == null) socket.data.historic.push(null);
+
+		else {
 			socket.data.historic.push(false);
+			socket.data.numeroErrors += 1;
 		}
+		
 		socket.data.respostes.push(data.resposta);
 	})
 
@@ -209,7 +218,7 @@ io.on("connection", socket => {
 			}
 		});
 
-		if (preguntasDisponibles.length === 10) {
+		if (preguntasDisponibles.length === JSON.parse(socket.data.preguntes).length) {
 			preguntasEnviadas = [];
 			preguntasDisponibles = JSON.parse(socket.data.preguntes);
 		}
@@ -220,7 +229,6 @@ io.on("connection", socket => {
 		const { pregunta, respostes, correcta } = {...preguntaSeleccionada};
 		io.to('my-room').emit('pregunta', {pregunta, respostes, correcta});
 	};
-	
 
 });
 

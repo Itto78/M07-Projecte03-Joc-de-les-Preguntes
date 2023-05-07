@@ -10,11 +10,22 @@
     background-color: rgba(0, 128, 0, 0.226);
 }
 
+.divIncorrecta{
+    background-color: red;
+}
+
+.divCorrecta{
+    background-color: green;
+}
+
+.divNull{
+    background-color: lightgray;
+}
+
 .historic{
     width: 3rem;
     height: 3rem;
     border: 1px solid black;
-    background-color: lightgray;
     display: inline;
 }
 
