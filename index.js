@@ -52,12 +52,9 @@ io.on("connection", socket => {
 		socket.data.nickname = data.nickname;
 		socket.data.puntuacio = 0;
 		socket.data.historic = [];
-		socket.data.numeroEncerts = 0;
-		socket.data.numeroErrors = 0;
-		socket.data.respostes = [];
 
 		// respondre al que ha enviat
-		socket.emit("nickname rebut", { response: "ok" });
+		socket.emit("nickname rebut", { response: "ok", id: socket.id });
 
 		// respondre a la resta de clients menys el que ha enviat
 		// socket.broadcast.emit("nickname rebut", {});
@@ -75,10 +72,7 @@ io.on("connection", socket => {
 					userID: id,
 					username: socket.data.nickname,
 					puntuacio: socket.data.puntuacio,
-					respostes: socket.data.respostes,
 					historic: socket.data.historic,
-					numeroEncerts: socket.data.numeroEncerts,
-					numeroErrors: socket.data.numeroErrors,
 				});
 			}
 		}
@@ -178,6 +172,7 @@ io.on("connection", socket => {
 
 	socket.on('compteEnrere', function(){
 		var segons = 2;
+		io.to('my-room').emit('numeroPeguntes', {numeroPeguntes, numPregunta});
 		var temporitzador = setInterval( () => {
 			io.to('my-room').emit('mostrarCompteEnrere', segons, false);
 			segons--;
@@ -185,7 +180,6 @@ io.on("connection", socket => {
 				// segons = 2;
 				numRespostes = 0;
 				io.to('my-room').emit('carregarRespostes');
-				console.log((socket.data.preguntes)[0].correcta);
 				let pregunta = (socket.data.preguntes)[0].pregunta;
 				let respostes = [(socket.data.preguntes)[0].respostes.a, (socket.data.preguntes)[0].respostes.b, (socket.data.preguntes)[0].respostes.c, (socket.data.preguntes)[0].respostes.d];
 				preguntaActual = (socket.data.preguntes).shift();
@@ -216,6 +210,10 @@ io.on("connection", socket => {
 			let pregunta = (socket.data.preguntes)[0].pregunta;
 			let respostes = [(socket.data.preguntes)[0].respostes.a, (socket.data.preguntes)[0].respostes.b, (socket.data.preguntes)[0].respostes.c, (socket.data.preguntes)[0].respostes.d];
 			preguntaActual = (socket.data.preguntes).shift();
+			io.to('my-room').emit('users', {users: usuaris});
+
+			io.to('my-room').emit('modificarHistoric', {numeroPeguntes, numPregunta});
+
 			io.to('my-room').emit('mostrarPregunta', pregunta, respostes, numPregunta);
 			numPregunta++;
 			mostrarTemporitzador();
@@ -249,10 +247,13 @@ io.on("connection", socket => {
 		// Comprovem els jugadors que han acertat la pregunta i afegim les puntuacions
 		let posicio = 1;
 		puntuacio.forEach(respostaJugador => {
+			let jugador = usuaris.filter(usuari => usuari.username === respostaJugador.nickname);
+
 			if (respostaJugador.resposta === respostaCorrecta) {
-				let jugador = usuaris.filter(usuari => usuari.username === respostaJugador.nickname);
+				
+				console.log(jugador);
+
 				jugador[0].nombreEncerts++;
-				console.log(jugador[0].nombreEncerts);
 				if (posicio > 5) jugador[0].puntuacio += 1000;
 				else {
 					if (posicio == 1) jugador[0].puntuacio += 1500;
@@ -263,7 +264,12 @@ io.on("connection", socket => {
 					posicio++;
 				}
 				io.to(respostaJugador.socketID).emit('canviarFons', true);
-			} else io.to(respostaJugador.socketID).emit('canviarFons', false);
+				jugador[0].historic.push(true);
+			} else {
+				io.to(respostaJugador.socketID).emit('canviarFons', false);
+				jugador[0].historic.push(false);
+			}
+
 		});
 
 		// Ordenem la taula de jugadors per puntuació
@@ -277,29 +283,7 @@ io.on("connection", socket => {
 
     socket.on("disconnect", function(){
         console.log('Usuari desconectat');
-    });
-
-	let preguntasEnviadas = [];
-
-	function seleccionarPreguntaAleatoria() {
-		let preguntasDisponibles = JSON.parse(socket.data.preguntes).filter(pregunta => {
-			if(!preguntasEnviadas.some(preguntaEnviada => preguntaEnviada.pregunta === pregunta.pregunta)) {
-			return pregunta;
-			}
-		});
-
-		if (preguntasDisponibles.length === 10) {
-			preguntasEnviadas = [];
-			preguntasDisponibles = JSON.parse(socket.data.preguntes);
-		}
-		
-		const preguntaSeleccionada = preguntasDisponibles[Math.floor(Math.random() * preguntasDisponibles.length)];
-		preguntasEnviadas.push(preguntaSeleccionada);
-
-		const { pregunta, respostes, correcta} = {...preguntaSeleccionada};
-		io.to('my-room').emit('pregunta', {pregunta, respostes, correcta});
-	};
-	
+    });	
 
 });
 

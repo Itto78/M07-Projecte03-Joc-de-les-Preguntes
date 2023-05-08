@@ -3,8 +3,6 @@ import socket from './socket.js';
 const titol = document.getElementById("titol");
 const nickname = document.getElementById("nickname");
 const usuaris = document.getElementById("usuaris");
-const missatge = document.getElementById("missatge");
-const pregunta = document.getElementById("pregunta");
 const respostes = document.getElementById("respostes");
 const error = document.getElementById("error");
 var body = document.getElementsByTagName("body");
@@ -18,19 +16,15 @@ c.addEventListener("click", enviarResposta);
 const d = document.getElementById("d");
 d.addEventListener("click", enviarResposta);
 
-const podi = document.getElementById("podi");
-const temps = document.getElementById('temps');
 const historic = document.getElementById("historic");
 
 const nicknameInput = document.getElementById("nicknameInput");
 const sendButton = document.getElementById("sendButton");
 sendButton.addEventListener("click", send);
 
-let preguntaActual = 1;
-let totalPreguntesRespostes, childrens, id;
+let totalPreguntesRespostes, childrens, id, preguntaActual;
 
 function send() {
-    console.log(nicknameInput.value);
     if (nicknameInput.value !== "") {
         error.innerHTML = "";
         // Envia un missatge tipus nickname, la primera part ("") 
@@ -43,8 +37,6 @@ function send() {
 
 
 socket.on('nickname rebut', function(data) {
-
-    console.log(data);
 
     // document.cookie = 'id=' +data.id;
     id = data.id;
@@ -62,12 +54,44 @@ socket.on('users', function(users){
 
     // Mostrem el llistat d'usuaris per pantalla
     (users.users).forEach(usuari => {
+        console.log(usuari)
+        if(id == usuari.userID) totalPreguntesRespostes = usuari.historic;
         var span = document.createElement("span");
         span.innerText = usuari.username;
         usuaris.appendChild(span);
     });
 
 });
+
+socket.on('numeroPeguntes', function(data){
+    historic.classList.remove('ocultar');
+    for (let index = 0; index < data.numeroPeguntes; index++) {
+        const div = document.createElement('div');
+        div.innerText = index + 1;
+        div.setAttribute('class', 'historic divNull');
+        historic.appendChild(div);
+    };
+
+    preguntaActual = data.numPregunta;
+
+    childrens = historic.children;
+    modificarHistoric();
+});
+
+function modificarHistoric(){
+    if(!childrens) return;
+
+    for (const children of childrens) {
+        let posicio = parseInt(children.textContent);
+
+        children.classList.toggle('preguntaActual', posicio == preguntaActual);
+
+        console.log(totalPreguntesRespostes)
+
+        if(totalPreguntesRespostes[posicio - 1] === false) children.classList.replace('divNull', 'divIncorrecta');
+        if(totalPreguntesRespostes[posicio - 1] === true) children.classList.replace('divNull', 'divCorrecta');        
+    }
+}
 
 socket.on('mostrarCompteEnrere', (segons, estat) => {
     if (!estat) titol.innerHTML = "La partida començarà en " + segons + " segons &#x1F631;";
@@ -101,38 +125,17 @@ socket.on('canviarFons', estado => {
         titol.innerHTML = "En serio... &#x1F62B; &#x1F480; &#x1F64A;";
     }
 });
-function modificarHistoric(){
+
+socket.on('modificarHistoric', function(data){
     if(!childrens) return;
-    
-    if(totalPreguntesRespostes.length != 0) {
-        preguntaActual++;
-    }
 
     for (const children of childrens) {
         let posicio = parseInt(children.textContent);
 
-        children.classList.toggle('preguntaActual', posicio == preguntaActual);
+        children.classList.toggle('preguntaActual', posicio == data.numPregunta);
 
         if(totalPreguntesRespostes[posicio - 1] === false) children.classList.replace('divNull', 'divIncorrecta');
         if(totalPreguntesRespostes[posicio - 1] === true) children.classList.replace('divNull', 'divCorrecta');        
     }
-}
 
-function calcularPercentatjes(num){
-    if(childrens === undefined) return 0;
-    let numTotalPreguntes = childrens.length;
-
-    let percentatje = (num / numTotalPreguntes) * 100;
-    return percentatje;
-}
-
-function getCookieValue(name) {
-    var cookies = document.cookie.split("; ");
-    for (var i = 0; i < cookies.length; i++) {
-        var cookie = cookies[i].split("=");
-        if (cookie[0] === name) {
-            return decodeURIComponent(cookie[1]);
-        }
-    }
-    return "";
-}
+});
