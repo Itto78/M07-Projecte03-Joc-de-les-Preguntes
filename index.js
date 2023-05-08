@@ -52,6 +52,8 @@ io.on("connection", socket => {
 		// Cada socket es individual
 		socket.data.nickname = data.nickname;
 		socket.data.puntuacio = 0;
+		socket.data.nombreEncerts = 0;
+		socket.data.nombreErrors = 0;
 
 		// respondre al que ha enviat
 		socket.emit("nickname rebut", { response: "ok" });
@@ -72,7 +74,8 @@ io.on("connection", socket => {
 					userID: id,
 					username: socket.data.nickname,
 					puntuacio: socket.data.puntuacio,
-					nombreEncerts: 0
+					nombreEncerts: socket.data.nombreEncerts,
+					nombreErrors: socket.data.nombreErrors
 				});
 			}
 		}
@@ -243,10 +246,9 @@ io.on("connection", socket => {
 		// Comprovem els jugadors que han acertat la pregunta i afegim les puntuacions
 		let posicio = 1;
 		puntuacio.forEach(respostaJugador => {
+			let jugador = usuaris.filter(usuari => usuari.username === respostaJugador.nickname);
 			if (respostaJugador.resposta === respostaCorrecta) {
-				let jugador = usuaris.filter(usuari => usuari.username === respostaJugador.nickname);
 				jugador[0].nombreEncerts++;
-				console.log(jugador[0].nombreEncerts);
 				if (posicio > 5) jugador[0].puntuacio += 1000;
 				else {
 					if (posicio == 1) jugador[0].puntuacio += 1500;
@@ -257,7 +259,10 @@ io.on("connection", socket => {
 					posicio++;
 				}
 				io.to(respostaJugador.socketID).emit('canviarFons', true);
-			} else io.to(respostaJugador.socketID).emit('canviarFons', false);
+			} else {
+				jugador[0].nombreErrors++;
+				io.to(respostaJugador.socketID).emit('canviarFons', false);
+			}
 		});
 
 		// Ordenem la taula de jugadors per puntuació
