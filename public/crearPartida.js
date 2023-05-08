@@ -17,8 +17,8 @@ const podiProvisional = document.getElementById("podiProvisional");
 const bodyPodiProvisional = document.getElementById("bodyPodiProvisional");
 const seguentPregunta = document.getElementById("seguentPregunta");
 seguentPregunta.addEventListener('click', continuarJoc);
-
-var preguntes = [];
+const reiniciaJoc = document.getElementById('reiniciaJoc');
+reiniciaJoc.addEventListener('click', reiniciJoc)
 
 async function generarPreguntes() {
 
@@ -39,6 +39,7 @@ async function generarPreguntes() {
 }
 
 function tornarAlSelect() {
+    socket.emit('reiniciaJugadors');
     selectTematica.removeAttribute("hidden");
     seleccioTematica.removeAttribute("hidden");
     ButtonPartida.setAttribute("hidden", true);
@@ -61,6 +62,7 @@ socket.on('mostrarCompteEnrere', (segons, estat) => {
         titol.innerHTML = "La partida començarà en " + segons + " segons &#x1F601;";
         ButtonPartida.setAttribute("hidden", true);
         tornarEnrere.setAttribute("hidden", true);
+        reiniciaJoc.classList.add("ocultar");
     } else {
         temporitzador.innerHTML = `${segons} s`;
     }
@@ -69,6 +71,7 @@ socket.on('mostrarCompteEnrere', (segons, estat) => {
 socket.on('mostrarPregunta', (enunciat, respostes, numPregunta) => {
     respostesPregunta.classList.remove("ocultar");
     respostesPregunta.classList.add("respostesPregunta");
+    reiniciaJoc.classList.add("ocultar");
     titol.innerHTML = `Pregunta ${numPregunta}`;
     temporitzador.innerHTML = "10 s";
     pregunta.innerHTML = `${enunciat}`;
@@ -82,8 +85,11 @@ socket.on('mostrarPodi', (usuaris, partidaFinalitzada, numeroPeguntes) => {
     if (partidaFinalitzada) {
         titol.innerHTML = "CLASSIFICACIÓ FINAL";
         seguentPregunta.setAttribute("hidden", true);
+        tornarEnrere.removeAttribute("hidden");
+        reiniciaJoc.classList.remove("ocultar");
     } else {
         titol.innerHTML = "CLASSIFICACIÓ";
+        seguentPregunta.removeAttribute("hidden");
     }
     respostesPregunta.classList.remove("respostesPregunta");
     respostesPregunta.classList.add("ocultar");
@@ -91,6 +97,7 @@ socket.on('mostrarPodi', (usuaris, partidaFinalitzada, numeroPeguntes) => {
     temporitzador.classList.add("ocultar");
     podiProvisional.classList.remove("ocultar");
     podiProvisional.classList.add("podiProvisional");
+    reiniciaJoc.classList.remove("ocultar");
     bodyPodiProvisional.innerHTML = "";
     usuaris.forEach(usuari => {
         let tr = document.createElement('tr');
@@ -107,7 +114,15 @@ socket.on('mostrarPodi', (usuaris, partidaFinalitzada, numeroPeguntes) => {
     });
 });
 
+function reiniciJoc(){
+    socket.emit('reiniciaJugadors');
+    carregarJoc();
+}
+
 function carregarJoc(){
+    podiProvisional.classList.add("ocultar");
+    podiProvisional.classList.remove("podiProvisional");
+    socket.emit('reinici');
     socket.emit('compteEnrere');
 }
 
@@ -125,6 +140,9 @@ socket.connect();
 // Enviem l'event 'join room' al servidor per a unir-se a la sala 'my-room'
 socket.emit('join room', 'my-room');
 
+socket.emit('reinici');
+socket.emit('reiniciaJugadors');
+
 socket.on('users', function(users){
     console.log(users)
-})
+});
