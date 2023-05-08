@@ -4,28 +4,65 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="estils.css">
+
+    <script src="https://kit.fontawesome.com/ab9c717bd5.js" crossorigin="anonymous"></script>
+    <script type="module" src="crearPartida.js" defer></script>
+
     <title>Crear Partida</title>
 </head>
-<body>
-    <h1>Crear Partida</h1>
+<body class="gradient">
 
-    <select name="tematica" id="tematica">
-        <option value="artILiteratura">Art i Literatura</option>
-        <option value="ciencia">Ciència</option>
-        <option value="historia">Història</option>
-        <option value="esports">Esports</option>
-        <option value="geografia">Geografia</option>
-        <option value="naturalesa">Naturalesa</option>
-        <option value="popurri">Popurri</option>
-    </select>
-    <button id="seleccioTematica">Selecciona la temàtica</button>
-    <button id="començarJoc" disabled>Començar</button>
     <div id="container">
+        <h1 id="titol">Crear Partida &#x1F60E;</h1>
 
+        <div class="opcions">
+            <select name="tematica" id="tematica">
+                <option value="artILiteratura">Art i Literatura</option>
+                <option value="ciencia">Ciència</option>
+                <option value="historia">Història</option>
+                <option value="esports">Esports</option>
+                <option value="geografia">Geografia</option>
+                <option value="naturalesa">Naturalesa</option>
+                <option value="popurri">Popurri</option>
+            </select>
+            <button id="seleccioTematica">Carregar Preguntes</button>
+            <button id="tornarEnrere" hidden><i class="fas fa-arrow-left"></i> Tornar</button>
+            <button id="començarJoc" hidden>Començar</button>
+        </div>
+
+        <div id="preguntaHeader">
+            <div id="pregunta"></div>
+            <div id="temporitzador"></div>
+        </div>
+        <div id="respostesPregunta" class="ocultar">
+            <div id="respostesPreguntaA" class="ocultar"></div>
+            <div id="respostesPreguntaB"></div>
+            <div id="respostesPreguntaC"></div>
+            <div id="respostesPreguntaD"></div>
+        </div>
+
+        <div id="podiProvisional" class="ocultar">
+            <button id="seguentPregunta" class="seguentPregunta">Següent Pregunta <i class="fas fa-arrow-right"></i></button>
+            <table>
+                <thead>
+                  <tr>
+                    <th>Nickname</th>
+                    <th>Puntuació</th>
+                    <th>Encerts/Errors</th>
+                  </tr>
+                </thead>
+                <tbody id="bodyPodiProvisional">
+                </tbody>
+            </table>
+        </div>
 
     </div>
-
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.min.js"></script>
-	<script type="module" src="crearPartida.js" defer></script>
+	
 </body>
 </html>
