@@ -1,0 +1,241 @@
+/* ESTILS GENERALS */
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    font-family: 'Montserrat', sans-serif;
+}
+
+h1 {
+    font-size: 3rem;
+    font-weight: 900;
+}
+
+input {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: none;
+    background-color: #f3f3f3;
+    font-size: 16px;
+    font-family: 'Montserrat', sans-serif;
+    color: #333;
+    box-shadow: 0 0 0 2px transparent, 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #007aff, 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    background-color: #007aff;
+    color: #fff;
+    font-size: 16px;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+button:hover {
+    background-color: #0055ff;
+}
+
+button:active {
+    background-color: #0039cb;
+}
+
+button i {
+    margin-right: 10px;
+}
+
+select {
+    appearance: none;
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    color: #444;
+    font-size: 16px;
+    font-family: 'Montserrat', sans-serif;
+    padding: 8px 12px;
+    width: 50%;
+    cursor: pointer;
+}
+
+select:hover {
+    border-color: #999;
+}
+
+select:focus {
+    border-color: #007aff;
+    outline: none;
+}
+
+select option {
+    color: #444;
+    font-size: 16px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.ocultar {
+    display: none;
+}
+
+#container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+}
+
+.opcions {
+    width: 35%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.usuaris {
+    width: 100%;
+    display: flex;
+    justify-content:space-around
+}
+
+#usuaris > span {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.respostes,
+.respostesPregunta {
+    width: 80%;
+    height: 80vh;
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+#a, #b, #c, #d {
+    cursor: pointer;
+}
+
+#a, #b, #c, #d,
+#respostesPreguntaA,
+#respostesPreguntaB,
+#respostesPreguntaC,
+#respostesPreguntaD {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10rem;
+    font-weight: 900;
+    color: white;
+}
+
+#a, #respostesPreguntaA {
+    background-color: #F44336;
+}
+
+#b, #respostesPreguntaB {
+    background-color: #8BC34A;
+}
+
+#c, #respostesPreguntaC {
+    background-color: #0072C6;
+}
+
+#d, #respostesPreguntaD {
+    background-color: #FFC300;
+}
+
+#preguntaHeader,
+#respostesPreguntaA,
+#respostesPreguntaB,
+#respostesPreguntaC,
+#respostesPreguntaD {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.respostesPregunta {
+    width: 100%;
+    height: 40vh;
+}
+
+#preguntaHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2rem;
+    width: 100%;
+}
+
+#temporitzador {
+    font-size: 4rem;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 1.5rem;
+}
+
+th, td {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: 900;
+}
+
+td {
+    font-weight: 600;
+}
+
+tr:hover {
+    background-color: #f5f5f5;
+}
+
+.podiProvisional {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.seguentPregunta {
+    width: 30%;
+    margin-bottom: 2rem;
+}
+
+.seguentPregunta i {
+    margin-left: 10px;
+}
+
+.gradient {
+    background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
+}
+
+.green {
+    background-color: green;
+}
+
+.red {
+    background-color: red;
+}
+
+#error {
+    color: red;
+    margin-top: 2rem;
+    font-size: 2rem;
+    font-weight: 600;
+}

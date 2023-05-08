@@ -1,14 +1,29 @@
 <!DOCTYPE html>
-<html>
-	<head> </head>
-	<body>
-		<!-- Client Entra el teu nom <input id="nicknameInput" type="text" /> -->
-		<!-- <button id="sendButton">Començar Partida</button> -->
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		<button id="crearPartida">Crear una Partida</button>
-		<button id="jugarPartida">Jugar una Partida</button>
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.min.js"></script>
-		<script type="module" src="main.js" defer></script>
-	</body>
+	<link rel="stylesheet" href="estils.css">
+
+	<title>Pàgina Principal</title>
+</head>
+<body class="gradient">
+
+	<div id="container">
+
+		<h1 id="titol">&#x1F60A; Crea o Juga! &#x1F603;</h1>
+		<div class="opcions">
+			<button id="crearPartida">Crear una Partida</button>
+			<button id="jugarPartida">Jugar una Partida</button>
+		</div>
+	</div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.min.js"></script>
+	<script type="module" src="main.js" defer></script>
+
+</body>
 </html>
