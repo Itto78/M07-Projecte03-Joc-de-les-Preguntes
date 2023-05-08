@@ -3,8 +3,21 @@ import socket from './socket.js';
 const titol = document.getElementById("titol");
 const nickname = document.getElementById("nickname");
 const usuaris = document.getElementById("usuaris");
-const divPregunta = document.getElementById("pregunta");
-const divRespostes = document.getElementById("respostes");
+const missatge = document.getElementById("missatge");
+const pregunta = document.getElementById("pregunta");
+const respostes = document.getElementById("respostes");
+const error = document.getElementById("error");
+var body = document.getElementsByTagName("body");
+
+const a = document.getElementById("a");
+a.addEventListener("click", enviarResposta);
+const b = document.getElementById("b");
+b.addEventListener("click", enviarResposta);
+const c = document.getElementById("c");
+c.addEventListener("click", enviarResposta);
+const d = document.getElementById("d");
+d.addEventListener("click", enviarResposta);
+
 const podi = document.getElementById("podi");
 const temps = document.getElementById('temps');
 const historic = document.getElementById("historic");
@@ -17,11 +30,15 @@ let preguntaActual = 1;
 let totalPreguntesRespostes, childrens, id;
 
 function send() {
-    // Envia un missatge tipus nickname, la primera part ("") 
-    // es configurable excepte paraules reservades segona part 
-    // el contingut (,)
-    socket.connect();
-    socket.emit("nickname", {nickname: nicknameInput.value} )
+    console.log(nicknameInput.value);
+    if (nicknameInput.value !== "") {
+        error.innerHTML = "";
+        // Envia un missatge tipus nickname, la primera part ("") 
+        // es configurable excepte paraules reservades segona part 
+        // el contingut (,)
+        socket.connect();
+        socket.emit("nickname", {nickname: nicknameInput.value} )
+    } else error.innerHTML = "El nom és obligatori";
 };
 
 
@@ -37,95 +54,53 @@ socket.on('nickname rebut', function(data) {
 
 });
 
-socket.on('users', function(data){
-    const users = data.users;
-
-    // const id = getCookieValue('id');
-
-    console.log({users, id})
-    nickname.remove();
-    usuaris.innerHTML = '';
-    for (let i in users){
-        if(id == users[i].userID) totalPreguntesRespostes = users[i].historic;
-        const span = document.createElement('span');
-        span.textContent = 'nickName: ' + users[i].username + ' puntuacio: ' + users[i].puntuacio + " percentatje d'accerts: " 
-        + calcularPercentatjes(users[i].numeroEncerts) + "% percentatjes d'errros: " + calcularPercentatjes(users[i].numeroErrors) + '%';
-        usuaris.appendChild(span);
-        const br = document.createElement('br');
-        usuaris.appendChild(br);
-    }
-
-});
-
-socket.on('pregunta', function(response){
-    const {pregunta, respostes , correcta} = response;
-    console.log(correcta);
-    modificarHistoric();
-    let count = 10;
-    temps.innerText = count + 's'
-    let setTemps = setInterval(function() {
-        count--;
-        temps.innerText = count + 's';
-        if(count == 0){
-            clearInterval(setTemps);
-            if(!divRespostes.firstChild.hasAttribute('disabled')) resposta(null, correcta);
-            respostaCorrecte(correcta);
-            socket.emit('get users', {});
-        }
-    }, 1000);
-
-    divPregunta.innerText = pregunta;
-
-    divRespostes.innerHTML = '';
-
-    for (let i in respostes) {
-        const button = document.createElement('button');
-        button.textContent = `${respostes[i]}`;
-        button.setAttribute('class','respostes');
-        button.addEventListener('click',() => resposta(respostes[i], correcta));
-        divRespostes.appendChild(button);
-    }
-
-});
-
-socket.on('numTotalPreg', function(data){
-    for (let index = 0; index < data.numTotalPreg; index++) {
-        const div = document.createElement('div');
-        div.innerText = index + 1;
-        div.setAttribute('class', 'historic divNull');
-        historic.appendChild(div);
-    }
+socket.on('users', function(users){
     
-    childrens = historic.children;
-    modificarHistoric();
+    titol.innerHTML = "Esperant a la resta de jugadors &#x1F634;...";
+    nickname.remove(); // Esborra l'input de crear nickname
+    usuaris.innerHTML = ""; // Reseteja el llistat d'usuaris que es moestren per pantalla
+
+    // Mostrem el llistat d'usuaris per pantalla
+    (users.users).forEach(usuari => {
+        var span = document.createElement("span");
+        span.innerText = usuari.username;
+        usuaris.appendChild(span);
+    });
+
 });
 
-socket.on('final', function(){
-    socket.emit('get users', {});
-    modificarHistoric();
-})
+socket.on('mostrarCompteEnrere', (segons, estat) => {
+    if (!estat) titol.innerHTML = "La partida començarà en " + segons + " segons &#x1F631;";
+});
 
-function resposta(resposta, correcta){
-    let buttons = divRespostes.children;
-    for (const button of buttons) {
-        button.setAttribute("disabled","");
-    }
-    socket.emit('resposta', {resposta, correcta});
+socket.on('carregarRespostes', () => {
+    body[0].className = '';
+    body[0].classList.add("gradient");
+    titol.innerHTML = "Escull la resposta CORRECTA";
+    usuaris.setAttribute("hidden", true);
+    usuaris.classList.remove("usuaris");
+    usuaris.classList.add("ocultar");
+    respostes.classList.remove("ocultar");
+    respostes.classList.add("respostes");
+});
 
+function enviarResposta(event) {
+    titol.innerHTML = "Esperant a la resta de companys... &#x1F928;";
+    respostes.classList.remove("respostes");
+    respostes.classList.add("ocultar");
+    socket.emit('enviarResposta', event.target.innerHTML);
 }
 
-function respostaCorrecte(correcta){
-    let respostes = document.getElementsByClassName('respostes');
-
-    for(let i = 0; i < 4; i++){
-        if(respostes[i].textContent !== correcta) {
-            respostes[i].classList.add('incorrecta');
-        }
-        else respostes[i].classList.add('correcta');
+socket.on('canviarFons', estado => {
+    body[0].classList.remove("gradient");
+    if (estado) {
+        body[0].classList.add("green");
+        titol.innerHTML = "Molt Bé!!! &#x1F603; &#x1F60D; &#x1F973;";
+    } else {
+        body[0].classList.add("red");
+        titol.innerHTML = "En serio... &#x1F62B; &#x1F480; &#x1F64A;";
     }
-
-}
-
+});
 function modificarHistoric(){
     if(!childrens) return;
     

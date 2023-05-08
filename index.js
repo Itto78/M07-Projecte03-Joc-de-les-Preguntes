@@ -29,14 +29,17 @@ const io = new Server(httpServer, {});
 // 		els clients connectats. El primer paràmetre és el nom de l'event i el 
 // 		segon paràmetre són les dades que s'envien.
 
-
-
+var usuaris = [];
+var puntuacio = [];
+var numRespostes = 0;
+var numPregunta = 1;
+var preguntaActual;
+var numeroPeguntes = 0;
 // Obrim connexió amb el socket on establim una serie de d'events que s'escoltaràn
 // directament d'aquest client
 io.on("connection", socket => {
-	// Informem de que el client s'acaba de connectar
 	console.log("Connectat un client...");
-
+	
 	// Agreguem el socket a la sala compartida 'my-room'
 	socket.on('join room', function(room) {
 		socket.join(room);
@@ -54,8 +57,7 @@ io.on("connection", socket => {
 		socket.data.respostes = [];
 
 		// respondre al que ha enviat
-		if(socket.data.nickname != '') socket.emit("nickname rebut", { response: "ok", id: socket.id });
-		else socket.emit("nickname rebut", { response: "false", message: 'El camp no pot estar vuit' });
+		socket.emit("nickname rebut", { response: "ok" });
 
 		// respondre a la resta de clients menys el que ha enviat
 		// socket.broadcast.emit("nickname rebut", {});
@@ -81,6 +83,7 @@ io.on("connection", socket => {
 			}
 		}
 
+		usuaris = users.slice();
 		io.to('my-room').emit('users', {users});
 	});
 
@@ -132,7 +135,8 @@ io.on("connection", socket => {
 		})).then(() => { // Una vegada s'hagin llegit tots els arxius, creem la propietat 'preguntes'
 						 // a l'objecte 'data' del socket on guardem totes les preguntes.
 			if(preguntes.length != 0 ){
-				socket.data.preguntes = preguntes;
+				socket.data.preguntes = desordenarPreguntes(preguntes); // Desordenem les preguntes
+				numeroPeguntes = (socket.data.preguntes).length;
 				// S'envia l'event 'elements carregats' amb un 'true' com a contingut
 				socket.emit('elements carregats',{response: true});
 			}
@@ -156,54 +160,120 @@ io.on("connection", socket => {
 			}
 			// Si la lectura s'ha fet correctament, creem la propietat 'preguntes'
 			// a l'objecte 'data' del socket on guardem totes les preguntes.
-			socket.data.preguntes = data;
+			socket.data.preguntes = desordenarPreguntes(JSON.parse(data)); // Desordenem les preguntes
+			numeroPeguntes = (socket.data.preguntes).length;
 			// S'envia l'event 'elements carregats' amb un 'true' com a contingut
 			socket.emit('elements carregats',{response: true});
-
-			
 		});
 	});
 
-	socket.on('començarJoc', function(){
-		console.log('comença el joc')
+	// Funció per a desordenar les preguntes de forma aleatoria
+	function desordenarPreguntes(preguntes) {
+		for (let i = preguntes.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[preguntes[i], preguntes[j]] = [preguntes[j], preguntes[i]];
+		  }
+		  return preguntes;
+	}
 
-		seleccionarPreguntaAleatoria();
-		io.to('my-room').emit('numTotalPreg', {numTotalPreg: JSON.parse(socket.data.preguntes).length});
-
-		let count = 1;
-
-		let intervalId = setInterval(function() {
-			
-			count++;
-			if (count > JSON.parse(socket.data.preguntes).length) {
-				clearInterval(intervalId);
-				io.to('my-room').emit('final');
+	socket.on('compteEnrere', function(){
+		var segons = 2;
+		var temporitzador = setInterval( () => {
+			io.to('my-room').emit('mostrarCompteEnrere', segons, false);
+			segons--;
+			if (segons < 0) {
+				// segons = 2;
+				numRespostes = 0;
+				io.to('my-room').emit('carregarRespostes');
+				console.log((socket.data.preguntes)[0].correcta);
+				let pregunta = (socket.data.preguntes)[0].pregunta;
+				let respostes = [(socket.data.preguntes)[0].respostes.a, (socket.data.preguntes)[0].respostes.b, (socket.data.preguntes)[0].respostes.c, (socket.data.preguntes)[0].respostes.d];
+				preguntaActual = (socket.data.preguntes).shift();
+				io.to('my-room').emit('mostrarPregunta', pregunta, respostes, numPregunta);
+				numPregunta++;
+				clearInterval(temporitzador);
+				mostrarTemporitzador();
 			}
-			
-			else {
-				seleccionarPreguntaAleatoria();
-			}
-			
-		}, 15000);
-
+		}, 1000);
 	});
-	
-	socket.on('resposta', function(data){
-		if(data.resposta == data.correcta) {
-			socket.data.puntuacio += 1;
-			socket.data.historic.push(true);
-			socket.data.numeroEncerts += 1;
+
+	socket.on('enviarResposta', resposta => {
+		let respostaJugador = {
+			socketID: socket.id,
+			nickname: socket.data.nickname,
+			resposta: resposta.toLowerCase()
+		};
+		puntuacio.push(respostaJugador);
+		numRespostes++;
+	});
+
+	socket.on('continuarJoc', () => {
+		if ((socket.data.preguntes).length != 0) {
+			numRespostes = 0;
+			puntuacio = [];
+			io.to('my-room').emit('carregarRespostes');
+			console.log((socket.data.preguntes)[0].correcta);
+			let pregunta = (socket.data.preguntes)[0].pregunta;
+			let respostes = [(socket.data.preguntes)[0].respostes.a, (socket.data.preguntes)[0].respostes.b, (socket.data.preguntes)[0].respostes.c, (socket.data.preguntes)[0].respostes.d];
+			preguntaActual = (socket.data.preguntes).shift();
+			io.to('my-room').emit('mostrarPregunta', pregunta, respostes, numPregunta);
+			numPregunta++;
+			mostrarTemporitzador();
+		} else io.to('my-room').emit('mostrarPodi', usuaris, true);
+	});
+
+	function mostrarTemporitzador() {
+		var temps = 9;
+		// io.to('my-room').emit('mostrarPregunta', numero);
+		var temporitzador = setInterval( () => {
+			io.to('my-room').emit('mostrarCompteEnrere', temps, true);
+			temps--;
+			if (temps < 0 || numRespostes == usuaris.length) {
+				clearInterval(temporitzador);
+				actualitzarPuntuacio();
+			}
+		}, 1000);
+	}
+
+	function actualitzarPuntuacio() {
+		// Recuperem la resposta correcta
+		let respostes = preguntaActual.respostes;
+		let respostaCorrecta = preguntaActual.correcta;
+		for (let resposta in respostes) {
+			if (respostes[resposta] === respostaCorrecta) {
+				respostaCorrecta = resposta;
+				break;
+			}
 		}
 
-		else if(data.resposta == null) socket.data.historic.push(null);
+		// Comprovem els jugadors que han acertat la pregunta i afegim les puntuacions
+		let posicio = 1;
+		puntuacio.forEach(respostaJugador => {
+			if (respostaJugador.resposta === respostaCorrecta) {
+				let jugador = usuaris.filter(usuari => usuari.username === respostaJugador.nickname);
+				jugador[0].nombreEncerts++;
+				console.log(jugador[0].nombreEncerts);
+				if (posicio > 5) jugador[0].puntuacio += 1000;
+				else {
+					if (posicio == 1) jugador[0].puntuacio += 1500;
+					else if (posicio == 2) jugador[0].puntuacio += 1400;
+					else if (posicio == 3) jugador[0].puntuacio += 1300;
+					else if (posicio == 4) jugador[0].puntuacio += 1200;
+					else if (posicio == 5) jugador[0].puntuacio += 1100;
+					posicio++;
+				}
+				io.to(respostaJugador.socketID).emit('canviarFons', true);
+			} else io.to(respostaJugador.socketID).emit('canviarFons', false);
+		});
 
-		else {
-			socket.data.historic.push(false);
-			socket.data.numeroErrors += 1;
-		}
-		
-		socket.data.respostes.push(data.resposta);
-	})
+		// Ordenem la taula de jugadors per puntuació
+		usuaris.sort(function(a, b) {
+			return b.puntuacio - a.puntuacio;
+		});
+
+		io.to('my-room').emit('mostrarPodi', usuaris, false, numeroPeguntes);
+
+	}
 
     socket.on("disconnect", function(){
         console.log('Usuari desconectat');
@@ -214,11 +284,11 @@ io.on("connection", socket => {
 	function seleccionarPreguntaAleatoria() {
 		let preguntasDisponibles = JSON.parse(socket.data.preguntes).filter(pregunta => {
 			if(!preguntasEnviadas.some(preguntaEnviada => preguntaEnviada.pregunta === pregunta.pregunta)) {
-				return pregunta;
+			return pregunta;
 			}
 		});
 
-		if (preguntasDisponibles.length === JSON.parse(socket.data.preguntes).length) {
+		if (preguntasDisponibles.length === 10) {
 			preguntasEnviadas = [];
 			preguntasDisponibles = JSON.parse(socket.data.preguntes);
 		}
@@ -226,66 +296,12 @@ io.on("connection", socket => {
 		const preguntaSeleccionada = preguntasDisponibles[Math.floor(Math.random() * preguntasDisponibles.length)];
 		preguntasEnviadas.push(preguntaSeleccionada);
 
-		const { pregunta, respostes, correcta } = {...preguntaSeleccionada};
+		const { pregunta, respostes, correcta} = {...preguntaSeleccionada};
 		io.to('my-room').emit('pregunta', {pregunta, respostes, correcta});
 	};
+	
 
 });
-
-// app.get('/preguntes/:tematica', (req, res) => {
-// 	const path = './preguntes/' + req.params.tematica + '.json';
-// 	fs.readFile(path, 'utf-8', (err, data) => {
-// 		if (err) {
-// 			console.log(err);
-// 			return;
-// 		}
-// 		res.status(200).json({preguntes: JSON.parse(data)});
-// 	});
-// });
-
-// app.get('/preguntesRandom', (req, res) => {
-
-// 	const preguntes = [];
-
-// 	const nomFitxers=['artILiteratura', 'ciencia', 'historia', 'esports', 'geografia', 'naturalesa'];
-
-// 	Promise.all(nomFitxers.map(nom => {
-// 	let path = './preguntes/' + nom + '.json';
-
-// 	return new Promise((resolve, reject) => {
-// 		fs.readFile(path, 'utf-8', (err, data) => {
-// 		if (err) {
-// 			console.log(err);
-// 			reject(err);
-// 			return;
-// 		}
-
-// 		let arrayPosPreguntes = [];
-// 		let arrayPreguntes = JSON.parse(data);
-
-// 		for (let i = 0; i < 5; i++) {
-// 			let posPregunta = Math.floor(Math.random() * arrayPreguntes.length);
-
-// 			if (!arrayPosPreguntes.includes(posPregunta)) {
-// 				arrayPosPreguntes.push(posPregunta);
-// 				preguntes.push(arrayPreguntes[posPregunta]);
-// 			} else {
-// 				i--;
-// 			}
-// 		}
-
-// 		resolve();
-// 		});
-// 	});
-// 	})).then(() => {
-// 		console.log(preguntes);
-// 		res.status(200).json({preguntes});
-// 	}).catch(err => {
-// 		console.log(err);
-// 		res.status(500).send('Error');
-// 	});
-
-// });
 
 // Iniciem el servidor HTTP pel port 3000
 httpServer.listen(3000, () =>
