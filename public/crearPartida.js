@@ -99,7 +99,7 @@ socket.on('mostrarPodi', (usuaris, partidaFinalitzada, numeroPeguntes) => {
         let tdEncertsErrors = document.createElement('td');
         tdNickname.innerHTML = usuari.username;
         tdPuntuacio.innerHTML = usuari.puntuacio;
-        tdEncertsErrors.innerHTML = (usuari.percentatgeEncerts / numeroPeguntes) * 100 + "%";
+        tdEncertsErrors.innerHTML = (usuari.nombreEncerts / numeroPeguntes) * 100 + "% / " + (usuari.nombreErrors / numeroPeguntes) * 100 + "%";
         tr.appendChild(tdNickname);
         tr.appendChild(tdPuntuacio);
         tr.appendChild(tdEncertsErrors);
