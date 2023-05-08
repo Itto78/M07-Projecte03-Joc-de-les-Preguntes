@@ -3,8 +3,6 @@ import socket from './socket.js';
 const titol = document.getElementById("titol");
 const nickname = document.getElementById("nickname");
 const usuaris = document.getElementById("usuaris");
-const missatge = document.getElementById("missatge");
-const pregunta = document.getElementById("pregunta");
 const respostes = document.getElementById("respostes");
 const error = document.getElementById("error");
 var body = document.getElementsByTagName("body");
@@ -18,14 +16,15 @@ c.addEventListener("click", enviarResposta);
 const d = document.getElementById("d");
 d.addEventListener("click", enviarResposta);
 
-const podi = document.getElementById("podi");
+const historic = document.getElementById("historic");
 
 const nicknameInput = document.getElementById("nicknameInput");
 const sendButton = document.getElementById("sendButton");
-sendButton.addEventListener("click", send)
+sendButton.addEventListener("click", send);
+
+let totalPreguntesRespostes, childrens, id, preguntaActual;
 
 function send() {
-    console.log(nicknameInput.value);
     if (nicknameInput.value !== "") {
         error.innerHTML = "";
         // Envia un missatge tipus nickname, la primera part ("") 
@@ -36,8 +35,11 @@ function send() {
     } else error.innerHTML = "El nom és obligatori";
 };
 
+
 socket.on('nickname rebut', function(data) {
 
+    // document.cookie = 'id=' +data.id;
+    id = data.id;
     socket.emit('join room', 'my-room');
 
     socket.emit('get users', {});
@@ -52,12 +54,44 @@ socket.on('users', function(users){
 
     // Mostrem el llistat d'usuaris per pantalla
     (users.users).forEach(usuari => {
+        console.log(usuari)
+        if(id == usuari.userID) totalPreguntesRespostes = usuari.historic;
         var span = document.createElement("span");
         span.innerText = usuari.username;
         usuaris.appendChild(span);
     });
 
 });
+
+socket.on('numeroPeguntes', function(data){
+    historic.classList.remove('ocultar');
+    for (let index = 0; index < data.numeroPeguntes; index++) {
+        const div = document.createElement('div');
+        div.innerText = index + 1;
+        div.setAttribute('class', 'historic divNull');
+        historic.appendChild(div);
+    };
+
+    preguntaActual = data.numPregunta;
+
+    childrens = historic.children;
+    modificarHistoric();
+});
+
+function modificarHistoric(){
+    if(!childrens) return;
+
+    for (const children of childrens) {
+        let posicio = parseInt(children.textContent);
+
+        children.classList.toggle('preguntaActual', posicio == preguntaActual);
+
+        console.log(totalPreguntesRespostes)
+
+        if(totalPreguntesRespostes[posicio - 1] === false) children.classList.replace('divNull', 'divIncorrecta');
+        if(totalPreguntesRespostes[posicio - 1] === true) children.classList.replace('divNull', 'divCorrecta');        
+    }
+}
 
 socket.on('mostrarCompteEnrere', (segons, estat) => {
     if (!estat) titol.innerHTML = "La partida començarà en " + segons + " segons &#x1F631;";
@@ -90,4 +124,18 @@ socket.on('canviarFons', estado => {
         body[0].classList.add("red");
         titol.innerHTML = "En serio... &#x1F62B; &#x1F480; &#x1F64A;";
     }
+});
+
+socket.on('modificarHistoric', function(data){
+    if(!childrens) return;
+
+    for (const children of childrens) {
+        let posicio = parseInt(children.textContent);
+
+        children.classList.toggle('preguntaActual', posicio == data.numPregunta);
+
+        if(totalPreguntesRespostes[posicio - 1] === false) children.classList.replace('divNull', 'divIncorrecta');
+        if(totalPreguntesRespostes[posicio - 1] === true) children.classList.replace('divNull', 'divCorrecta');        
+    }
+
 });

@@ -39,7 +39,6 @@ var numeroPeguntes = 0;
 // directament d'aquest client
 io.on("connection", socket => {
 	console.log("Connectat un client...");
-
 	
 	// Agreguem el socket a la sala compartida 'my-room'
 	socket.on('join room', function(room) {
@@ -52,11 +51,13 @@ io.on("connection", socket => {
 		// Cada socket es individual
 		socket.data.nickname = data.nickname;
 		socket.data.puntuacio = 0;
+		socket.data.historic = [];
 		socket.data.nombreEncerts = 0;
 		socket.data.nombreErrors = 0;
 
+
 		// respondre al que ha enviat
-		socket.emit("nickname rebut", { response: "ok" });
+		socket.emit("nickname rebut", { response: "ok", id: socket.id });
 
 		// respondre a la resta de clients menys el que ha enviat
 		// socket.broadcast.emit("nickname rebut", {});
@@ -74,6 +75,7 @@ io.on("connection", socket => {
 					userID: id,
 					username: socket.data.nickname,
 					puntuacio: socket.data.puntuacio,
+					historic: socket.data.historic,
 					nombreEncerts: socket.data.nombreEncerts,
 					nombreErrors: socket.data.nombreErrors
 				});
@@ -175,6 +177,7 @@ io.on("connection", socket => {
 
 	socket.on('compteEnrere', function(){
 		var segons = 2;
+		io.to('my-room').emit('numeroPeguntes', {numeroPeguntes, numPregunta});
 		var temporitzador = setInterval( () => {
 			io.to('my-room').emit('mostrarCompteEnrere', segons, false);
 			segons--;
@@ -182,7 +185,6 @@ io.on("connection", socket => {
 				// segons = 2;
 				numRespostes = 0;
 				io.to('my-room').emit('carregarRespostes');
-				console.log((socket.data.preguntes)[0].correcta);
 				let pregunta = (socket.data.preguntes)[0].pregunta;
 				let respostes = [(socket.data.preguntes)[0].respostes.a, (socket.data.preguntes)[0].respostes.b, (socket.data.preguntes)[0].respostes.c, (socket.data.preguntes)[0].respostes.d];
 				preguntaActual = (socket.data.preguntes).shift();
@@ -213,6 +215,10 @@ io.on("connection", socket => {
 			let pregunta = (socket.data.preguntes)[0].pregunta;
 			let respostes = [(socket.data.preguntes)[0].respostes.a, (socket.data.preguntes)[0].respostes.b, (socket.data.preguntes)[0].respostes.c, (socket.data.preguntes)[0].respostes.d];
 			preguntaActual = (socket.data.preguntes).shift();
+			io.to('my-room').emit('users', {users: usuaris});
+
+			io.to('my-room').emit('modificarHistoric', {numeroPeguntes, numPregunta});
+
 			io.to('my-room').emit('mostrarPregunta', pregunta, respostes, numPregunta);
 			numPregunta++;
 			mostrarTemporitzador();
@@ -246,7 +252,7 @@ io.on("connection", socket => {
 		// Comprovem els jugadors que han acertat la pregunta i afegim les puntuacions
 		let posicio = 1;
 		puntuacio.forEach(respostaJugador => {
-			let jugador = usuaris.filter(usuari => usuari.username === respostaJugador.nickname);
+			let jugador = usuaris.filter(usuari => usuari.username === respostaJugador.nickname);		
 			if (respostaJugador.resposta === respostaCorrecta) {
 				jugador[0].nombreEncerts++;
 				if (posicio > 5) jugador[0].puntuacio += 1000;
@@ -259,10 +265,13 @@ io.on("connection", socket => {
 					posicio++;
 				}
 				io.to(respostaJugador.socketID).emit('canviarFons', true);
+				jugador[0].historic.push(true);
 			} else {
-				jugador[0].nombreErrors++;
 				io.to(respostaJugador.socketID).emit('canviarFons', false);
+				jugador[0].historic.push(false);
+				jugador[0].nombreErrors++;
 			}
+
 		});
 
 		// Ordenem la taula de jugadors per puntuació
@@ -276,7 +285,7 @@ io.on("connection", socket => {
 
     socket.on("disconnect", function(){
         console.log('Usuari desconectat');
-    });
+    });	
 
 });
 
