@@ -51,7 +51,6 @@ socket.on('nickname rebut', function(data) {
 });
 
 socket.on('users', function(users){
-    console.log(users)
     titol.innerHTML = "Esperant a la resta de jugadors &#x1F634;...";
     nickname.remove(); // Esborra l'input de crear nickname
     usuaris.innerHTML = ""; // Reseteja el llistat d'usuaris que es moestren per pantalla
