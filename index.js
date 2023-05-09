@@ -186,14 +186,12 @@ io.on("connection", socket => {
 
 	socket.on('compteEnrere', function(){
 		var segons = 2;
-		// console.log({socket: socket.data, usuaris});
 		io.to('my-room').emit('numeroPeguntes', {numeroPeguntes, numPregunta});
 		temporitzadorIniciarPartida = setInterval( () => {
 			io.to('my-room').emit('mostrarCompteEnrere', segons, false);
 			segons--;
 			if (segons < 0) {
 				numRespostes = 0;
-				console.log({numPregunta, length: (socket.data.preguntes).length})
 				io.to('my-room').emit('carregarRespostes');
 				let pregunta = (socket.data.preguntes)[(numPregunta - 1)].pregunta;
 				let respostes = [(socket.data.preguntes)[(numPregunta - 1)].respostes.a, (socket.data.preguntes)[(numPregunta - 1)].respostes.b, (socket.data.preguntes)[(numPregunta - 1)].respostes.c, (socket.data.preguntes)[(numPregunta - 1)].respostes.d];
@@ -263,8 +261,9 @@ io.on("connection", socket => {
 
 		// Comprovem els jugadors que han acertat la pregunta i afegim les puntuacions
 		let posicio = 1;
+		console.log(puntuacio, usuaris)
 		puntuacio.forEach(respostaJugador => {
-			let jugador = usuaris.filter(usuari => usuari.username === respostaJugador.nickname);		
+			let jugador = usuaris.filter(usuari => usuari.userID === respostaJugador.socketID);		
 			if (respostaJugador.resposta === respostaCorrecta) {
 				jugador[0].nombreEncerts++;
 				if (posicio > 5) jugador[0].puntuacio += 1000;
