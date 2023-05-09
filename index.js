@@ -264,7 +264,7 @@ io.on("connection", socket => {
 		// Comprovem els jugadors que han acertat la pregunta i afegim les puntuacions
 		let posicio = 1;
 		puntuacio.forEach(respostaJugador => {
-			let jugador = usuaris.filter(usuari => usuari.userID === respostaJugador.socketID);		
+			let jugador = usuaris.filter(usuari => usuari.username === respostaJugador.nickname);		
 			if (respostaJugador.resposta === respostaCorrecta) {
 				jugador[0].nombreEncerts++;
 				if (posicio > 5) jugador[0].puntuacio += 1000;
@@ -286,7 +286,6 @@ io.on("connection", socket => {
 				jugador[0].historic.push(false);
 				jugador[0].nombreErrors++;
 			}
-
 		});
 		// Ordenem la taula de jugadors per puntuació
 		usuaris.sort(function(a, b) {
