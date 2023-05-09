@@ -239,3 +239,37 @@ tr:hover {
     font-size: 2rem;
     font-weight: 600;
 }
+
+.divIncorrecta{
+    background-color: red;
+}
+
+.divCorrecta{
+    background-color: green;
+}
+
+.divNull{
+    background-color: lightgray;
+}
+
+.historic{
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid black;
+    display: inline;
+    justify-content: center;
+}
+
+.preguntaActual{
+    background-color: yellow;
+}
+
+#historic{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    text-align: center;
+    width: 30rem;
+    height: 10rem;
+    margin-bottom: 3rem;
+}
