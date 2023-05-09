@@ -100,13 +100,15 @@ socket.on('mostrarPodi', (usuaris, partidaFinalitzada, numeroPeguntes) => {
     reiniciaJoc.classList.remove("ocultar");
     bodyPodiProvisional.innerHTML = "";
     usuaris.forEach(usuari => {
+        let encerts = usuari.nombreEncerts / numeroPeguntes * 100;
+        let errors = usuari.nombreErrors / numeroPeguntes * 100;
         let tr = document.createElement('tr');
         let tdNickname = document.createElement('td');
         let tdPuntuacio = document.createElement('td');
         let tdEncertsErrors = document.createElement('td');
         tdNickname.innerHTML = usuari.username;
         tdPuntuacio.innerHTML = usuari.puntuacio;
-        tdEncertsErrors.innerHTML = (usuari.nombreEncerts / numeroPeguntes) * 100 + "% / " + (usuari.nombreErrors / numeroPeguntes) * 100 + "%";
+        tdEncertsErrors.innerHTML = Math.round(encerts)  + "% / " + Math.round(errors) + "%";
         tr.appendChild(tdNickname);
         tr.appendChild(tdPuntuacio);
         tr.appendChild(tdEncertsErrors);
