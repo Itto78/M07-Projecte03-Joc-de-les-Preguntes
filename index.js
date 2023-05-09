@@ -35,6 +35,7 @@ var numRespostes = 0;
 var numPregunta = 1;
 var preguntaActual;
 var numeroPeguntes = 0;
+var temporitzadorIniciarPartida, compteEnrere;
 // Obrim connexió amb el socket on establim una serie de d'events que s'escoltaràn
 // directament d'aquest client
 io.on("connection", socket => {
@@ -64,6 +65,14 @@ io.on("connection", socket => {
 
 		// Totes les funcions disponibles les tenim a
 		//  https://socket.io/docs/v4/emit-cheatsheet/
+	});
+
+	socket.on('reinici', function(data){
+		numRespostes = 0;
+		numPregunta = 1;
+		puntuacio = [];
+		clearInterval(temporitzadorIniciarPartida);
+		clearInterval(compteEnrere);
 	});
 
 	socket.on("get users", function (data) {
@@ -171,26 +180,27 @@ io.on("connection", socket => {
 		for (let i = preguntes.length - 1; i > 0; i--) {
 			const j = Math.floor(Math.random() * (i + 1));
 			[preguntes[i], preguntes[j]] = [preguntes[j], preguntes[i]];
-		  }
-		  return preguntes;
+		}
+		return preguntes;
 	}
 
 	socket.on('compteEnrere', function(){
 		var segons = 2;
+		// console.log({socket: socket.data, usuaris});
 		io.to('my-room').emit('numeroPeguntes', {numeroPeguntes, numPregunta});
-		var temporitzador = setInterval( () => {
+		temporitzadorIniciarPartida = setInterval( () => {
 			io.to('my-room').emit('mostrarCompteEnrere', segons, false);
 			segons--;
 			if (segons < 0) {
-				// segons = 2;
 				numRespostes = 0;
+				console.log({numPregunta, length: (socket.data.preguntes).length})
 				io.to('my-room').emit('carregarRespostes');
-				let pregunta = (socket.data.preguntes)[0].pregunta;
-				let respostes = [(socket.data.preguntes)[0].respostes.a, (socket.data.preguntes)[0].respostes.b, (socket.data.preguntes)[0].respostes.c, (socket.data.preguntes)[0].respostes.d];
-				preguntaActual = (socket.data.preguntes).shift();
-				io.to('my-room').emit('mostrarPregunta', pregunta, respostes, numPregunta);
+				let pregunta = (socket.data.preguntes)[(numPregunta - 1)].pregunta;
+				let respostes = [(socket.data.preguntes)[(numPregunta - 1)].respostes.a, (socket.data.preguntes)[(numPregunta - 1)].respostes.b, (socket.data.preguntes)[(numPregunta - 1)].respostes.c, (socket.data.preguntes)[(numPregunta - 1)].respostes.d];
+				preguntaActual = (socket.data.preguntes)[(numPregunta - 1)];
+				socket.emit('mostrarPregunta', pregunta, respostes, numPregunta);
 				numPregunta++;
-				clearInterval(temporitzador);
+				clearInterval(temporitzadorIniciarPartida);
 				mostrarTemporitzador();
 			}
 		}, 1000);
@@ -200,21 +210,23 @@ io.on("connection", socket => {
 		let respostaJugador = {
 			socketID: socket.id,
 			nickname: socket.data.nickname,
-			resposta: resposta.toLowerCase()
 		};
+			
+		if(resposta !== null) respostaJugador.resposta = resposta.toLowerCase();
+		else respostaJugador.resposta = resposta;
 		puntuacio.push(respostaJugador);
 		numRespostes++;
 	});
 
 	socket.on('continuarJoc', () => {
-		if ((socket.data.preguntes).length != 0) {
+		if (numPregunta <= (socket.data.preguntes).length) {
 			numRespostes = 0;
 			puntuacio = [];
 			io.to('my-room').emit('carregarRespostes');
-			console.log((socket.data.preguntes)[0].correcta);
-			let pregunta = (socket.data.preguntes)[0].pregunta;
-			let respostes = [(socket.data.preguntes)[0].respostes.a, (socket.data.preguntes)[0].respostes.b, (socket.data.preguntes)[0].respostes.c, (socket.data.preguntes)[0].respostes.d];
-			preguntaActual = (socket.data.preguntes).shift();
+
+			let pregunta = (socket.data.preguntes)[(numPregunta - 1)].pregunta;
+			let respostes = [(socket.data.preguntes)[(numPregunta - 1)].respostes.a, (socket.data.preguntes)[(numPregunta - 1)].respostes.b, (socket.data.preguntes)[(numPregunta - 1)].respostes.c, (socket.data.preguntes)[(numPregunta - 1)].respostes.d];
+			preguntaActual = (socket.data.preguntes)[(numPregunta - 1)];
 			io.to('my-room').emit('users', {users: usuaris});
 
 			io.to('my-room').emit('modificarHistoric', {numeroPeguntes, numPregunta});
@@ -222,17 +234,17 @@ io.on("connection", socket => {
 			socket.emit('mostrarPregunta', pregunta, respostes, numPregunta);
 			numPregunta++;
 			mostrarTemporitzador();
-		} else io.to('my-room').emit('mostrarPodi', usuaris, true);
+		} else io.to('my-room').emit('mostrarPodi', usuaris, true, numeroPeguntes);
 	});
 
 	function mostrarTemporitzador() {
 		var temps = 9;
 		// io.to('my-room').emit('mostrarPregunta', numero);
-		var temporitzador = setInterval( () => {
+		compteEnrere = setInterval( () => {
 			io.to('my-room').emit('mostrarCompteEnrere', temps, true);
 			temps--;
 			if (temps < 0 || numRespostes == usuaris.length) {
-				clearInterval(temporitzador);
+				clearInterval(compteEnrere);
 				actualitzarPuntuacio();
 			}
 		}, 1000);
@@ -251,15 +263,8 @@ io.on("connection", socket => {
 
 		// Comprovem els jugadors que han acertat la pregunta i afegim les puntuacions
 		let posicio = 1;
-		usuari.forEach(user => {
-			let jugador;
-			if(puntuacio)
-		});
 		puntuacio.forEach(respostaJugador => {
-			console.log(respostaJugador);
-			
-			let jugador = usuaris.filter(usuari => usuari.username === respostaJugador.nickname);
-
+			let jugador = usuaris.filter(usuari => usuari.username === respostaJugador.nickname);		
 			if (respostaJugador.resposta === respostaCorrecta) {
 				jugador[0].nombreEncerts++;
 				if (posicio > 5) jugador[0].puntuacio += 1000;
@@ -273,13 +278,15 @@ io.on("connection", socket => {
 				}
 				io.to(respostaJugador.socketID).emit('canviarFons', true);
 				jugador[0].historic.push(true);
+			} else if (respostaJugador.resposta === null) {
+				io.to(respostaJugador.socketID).emit('canviarFons', false);
+				jugador[0].historic.push(null);
 			} else {
 				io.to(respostaJugador.socketID).emit('canviarFons', false);
 				jugador[0].historic.push(false);
 				jugador[0].nombreErrors++;
 			}
 		});
-
 		// Ordenem la taula de jugadors per puntuació
 		usuaris.sort(function(a, b) {
 			return b.puntuacio - a.puntuacio;
@@ -289,7 +296,18 @@ io.on("connection", socket => {
 
 	}
 
+	socket.on('reiniciaJugadors', function(){
+		usuaris = usuaris.filter(usuari => {
+			usuari.puntuacio = 0;
+			usuari.historic = [];
+			usuari.nombreEncerts = 0;
+			usuari.nombreErrors = 0;
+			return usuari;
+		})
+	});
+
     socket.on("disconnect", function(){
+		usuaris = usuaris.filter(usuari => usuari.userID !== socket.id);
         console.log('Usuari desconectat');
     });	
 
