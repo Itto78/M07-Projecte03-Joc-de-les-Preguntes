@@ -184,7 +184,12 @@ io.on("connection", socket => {
 		return preguntes;
 	}
 
+	// Es rep l'event 'compteEnrere' per part del client i el que fa es mostrar
+	// la pregunta amb les 4 possibles respostes i un compte enrere de 10s al 
+	// client que crea la partida. També es mostra 4 botons grans al client jugador
+	// per a que pugui escollir quina resposta és la correcta.
 	socket.on('compteEnrere', function(){
+
 		var segons = 2;
 		// console.log({socket: socket.data, usuaris});
 		io.to('my-room').emit('numeroPeguntes', {numeroPeguntes, numPregunta});
@@ -206,6 +211,8 @@ io.on("connection", socket => {
 		}, 1000);
 	});
 
+	// Es rep l'event 'enviarResposta' per part del client i l'argument 'resposta'.
+	// A la taula 'puntuacio' s'aniran guardant les respostes dels jugadors
 	socket.on('enviarResposta', resposta => {
 		let respostaJugador = {
 			socketID: socket.id,
