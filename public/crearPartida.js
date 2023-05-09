@@ -74,6 +74,7 @@ socket.on('mostrarPregunta', (enunciat, respostes, numPregunta) => {
     reiniciaJoc.classList.add("ocultar");
     titol.innerHTML = `Pregunta ${numPregunta}`;
     temporitzador.innerHTML = "10 s";
+    pregunta.classList.remove("ocultar");
     pregunta.innerHTML = `${enunciat}`;
     respostesPreguntaA.innerHTML = `A. ${respostes[0]}`;
     respostesPreguntaB.innerHTML = `B. ${respostes[1]}`;
@@ -146,5 +147,5 @@ socket.emit('reinici');
 socket.emit('reiniciaJugadors');
 
 socket.on('users', function(users){
-    console.log(users)
+    console.log(users);
 });
